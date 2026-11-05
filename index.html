@@ -582,7 +582,8 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     H2:{t:'Дома: ноги, плечи, осанка',dur:40,icon:'home'},
     H3:{t:'Дома: ягодицы, спина, кор',dur:40,icon:'home'},
     Y:{t:'Йога и растяжка',dur:25,icon:'lotus'},
-    W:{t:'Прогулка 40 минут',dur:40,icon:'walk'}};
+    W:{t:'Прогулка 40 минут',dur:40,icon:'walk'},
+    P:{t:'Домашний пилатес',dur:15,icon:'lotus'}};
   var ROT=['A','H1','B','H2','C','H3','D','Y'];
   // цикл: старт месячных и длина (по Flo: прошлый цикл с 11 октября, следующие ждём 9 ноября)
   function cycleStart(){ return state.cycle&&state.cycle.start||'2026-11-09' }
@@ -593,7 +594,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   // замена тренировки по фазе цикла
   function effWorkout(key){
     var t=workoutFor(key); if(t===null) return null;
-    var ov=DAYS[key]&&DAYS[key].wkType; if(ov) return {type:ov,note:'сегодня дома и вполсилы'};
+    var ov=DAYS[key]&&DAYS[key].wkType; if(ov) return {type:ov,note:DAYS[key].wkNote||'сегодня дома и вполсилы'};
     var ph=cyclePhase(key), c=cycleDay(key);
     if(ph==='men'){
       if(c<=2) return {type:'Y',note:'1–2 день месячных: вместо '+(WT[t].gym?'зала':'силовой')+' йога и растяжка'};
@@ -766,7 +767,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   var ACTN={ret:['Ретинол','горошина на всё лицо, вокруг глаз не наносить'],hyd:['Увлажняющая сыворотка','день без активов'],acid:['Кислоты','тонер AHA/BHA/PHA, ретинол сегодня не нужен']};
   // особые дни (график на конкретные даты)
   var DAYS={
-    '2026-11-05':{label:'выходной · дома, заболеваю',wkTime:'15:00',art:true,artTime:'12:30',wkType:'H3',wkHint:'самочувствие важнее плана: если температура или ломота — замените на йогу или пропустите без вины',clean:'17:00'},
+    '2026-11-05':{label:'выходной · дома, заболеваю',wkTime:'15:00',art:true,artTime:'12:30',wkType:'P',wkNote:'вместо силовой: заболеваю, поэтому мягко',wkHint:'засчитывается в годовой счётчик',clean:'17:00'},
     '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'15:30',wkHint:'перенесено с субботы · вход в зал до 17:00',free:'отдых и собрать вещи к поезду'},
     '2026-11-07':{label:'работа 7–15 · поезд 16:49',commute:true,train:true,travelEve:true},
     '2026-11-08':{label:'родной город',away:true},
