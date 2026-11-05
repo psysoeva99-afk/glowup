@@ -579,6 +579,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   // замена тренировки по фазе цикла
   function effWorkout(key){
     var t=workoutFor(key); if(t===null) return null;
+    var ov=DAYS[key]&&DAYS[key].wkType; if(ov) return {type:ov,note:'сегодня дома и вполсилы'};
     var ph=cyclePhase(key), c=cycleDay(key);
     if(ph==='men'){
       if(c<=2) return {type:'Y',note:'1–2 день месячных: вместо '+(WT[t].gym?'зала':'силовой')+' йога и растяжка'};
@@ -609,7 +610,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(e.type==='Y') hint+=' · программа в «Гиде»'+(cyclePhase(key)==='men'?', вариант для месячных':'');
     var time;
     if(w.gym){ time=(o&&o.wkTime)?o.wkTime:(weekend?'13:00':'обед'); if(o&&o.wkHint) hint+=' · '+o.wkHint; else if(!weekend) hint+=' · вход в зал до 17:00' }
-    else time=(o&&o.wkTime&&!o.travelMorning)?o.wkTime:(weekend?'13:00':'вечер');
+    else { time=(o&&o.wkTime&&!o.travelMorning)?o.wkTime:(weekend?'13:00':'вечер'); if(o&&o.wkType&&o.wkHint) hint+=' · '+o.wkHint }
     hint='тренировка '+(yrDoneBefore(key)+1)+'/'+YR_GOAL+' · '+hint;
     return {id:'wk',time:time,dur:(w.gym&&!weekend&&e.type==='D')?45:w.dur,t:w.t,hint:hint,icon:w.icon,c:w.gym?'var(--teal)':'var(--green)',tall:w.dur>=40};
   }
@@ -751,7 +752,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   var ACTN={ret:['Ретинол','горошина на всё лицо, вокруг глаз не наносить'],hyd:['Увлажняющая сыворотка','день без активов'],acid:['Кислоты','тонер AHA/BHA/PHA, ретинол сегодня не нужен']};
   // особые дни (график на конкретные даты)
   var DAYS={
-    '2026-11-05':{label:'выходной',wkTime:'13:00',art:true},
+    '2026-11-05':{label:'выходной · дома, заболеваю',wkTime:'15:00',art:true,artTime:'12:30',wkType:'H3',wkHint:'самочувствие важнее плана: если температура или ломота — замените на йогу или пропустите без вины',clean:'17:00'},
     '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'15:30',wkHint:'перенесено с субботы · вход в зал до 17:00',free:'отдых и собрать вещи к поезду'},
     '2026-11-07':{label:'работа 7–15 · поезд 16:49',commute:true,train:true,travelEve:true},
     '2026-11-08':{label:'родной город',away:true},
@@ -765,9 +766,10 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(o.away||o.travelMorning){ morning=[{part:'Утро · в поездке'}].concat(morning.filter(function(x){return MIN_M.indexOf(x.id)>=0})) }
     if(o.away||o.travelEve){ evening=[{part:'Вечер · в поездке'}].concat(evening.filter(function(x){return MIN_E.indexOf(x.id)>=0}).map(function(x){ var y=Object.assign({},x); if(y.id==='e_clean'){ y.time='перед сном'; y.t='Очищение'; y.hint='мицеллярная вода или гель, без масла' } return y })) }
     if(o.commute){ var ai=topicFor(key); mid.push({part:'Дорога на работу'},bookFirst({id:'rd',time:'метро',dur:50,t:'Гомбрих, «История искусства»',hint:(ai!==null&&ai>=0)?'глава к теме «'+TOPICS[ai][0]+'»':'читать по порядку',icon:'read',c:'var(--violet)'})) }
-    if(o.art){ var ti=topicFor(key); if(ti!==null&&ti>=0) mid.push({part:'Учёба'},{id:'st',time:'11:00',dur:90,t:'История искусства',hint:'Тема '+(ti+1)+': '+TOPICS[ti][0]+' · лекции и тест · перенесено с субботы',icon:'museum',c:'var(--violet)',tall:true}) }
+    if(o.art){ var ti=topicFor(key); if(ti!==null&&ti>=0) mid.push({part:'Учёба'},{id:'st',time:o.artTime||'11:00',dur:90,t:'История искусства',hint:'Тема '+(ti+1)+': '+TOPICS[ti][0]+' · лекции и тест · перенесено с субботы',icon:'museum',c:'var(--violet)',tall:true}) }
     if(o.trainPhil){ var pi=philFor(key); mid.push({part:'В поезде'},{id:'ph',time:'поезд',dur:50,t:'Философия: первая лекция',hint:(pi!==null&&pi>=0)?'Тема '+(pi+1)+': '+PHIL[pi][0]+' · можно слушать в наушниках':'',icon:'book',c:'var(--amber)',tall:true}) }
     var wk=workoutStep(wd,key); if(wk) mid.push({part:'Тренировка'},wk);
+    if(o.clean) mid.push({part:'Дом'},{id:'clean',time:o.clean,dur:60,t:'Уборка дома',hint:'спокойно, без генеральной: пыль, пол, кухня, проветрить. Между делом — тёплое питьё',icon:'home',c:'var(--lilac)',tall:true});
     if(o.train) mid.push({part:'Поезд 16:49'},bookFirst({id:'tr',time:'16:49',dur:60,t:'Книга в дорогу',hint:'Рассел, «История западной философии»: начать с древних греков',icon:'read',c:'var(--amber)'}));
     if(o.free) mid.push({part:'Пятница'},{id:'free',time:'вечер',t:'Свободный вечер',hint:o.free,icon:'heart',c:'var(--pink)'});
     if(o.away) mid.push({part:'Родной город'},{id:'free',time:'весь день',t:'День с семьёй',hint:'план на паузе: вода и минимум ухода',icon:'heart',c:'var(--pink)'});
