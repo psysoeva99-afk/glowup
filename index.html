@@ -247,6 +247,19 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 .ftot b{display:block;font-size:17px;color:var(--fg)}
 .fnote{background:var(--green-soft,var(--soft));border-radius:16px;padding:12px 14px;font-size:13.5px;line-height:1.45}
 .fnote b{display:block;margin-bottom:2px}
+.flog{background:var(--soft);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.flog h3{margin:0;font-size:15px}
+.fl{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:start;font-size:13.5px;padding:8px 0;border-top:1px solid var(--line)}
+.fl:first-of-type{border-top:0}
+.fl small{display:block;color:var(--muted);font-size:12px}
+.fl b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.fl button{border:0;background:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0 2px}
+.fsum{font-size:13.5px;line-height:1.45}
+.fbar{height:10px;border-radius:99px;background:var(--surface);overflow:hidden}
+.fbar i{display:block;height:100%;background:var(--olive);border-radius:99px}
+.fadd{display:grid;grid-template-columns:1fr 76px auto;gap:6px}
+.fadd input{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface);color:var(--fg);min-width:0}
+.fadd button{border:0;border-radius:12px;padding:8px 12px;font-weight:700;background:var(--olive);color:#fff;cursor:pointer}
 .fcheck{background:var(--coral-soft,var(--soft));border-radius:16px;padding:12px 14px;font-size:13.5px;line-height:1.45}
 @media (prefers-reduced-motion:reduce){.tube .f,.ctrack div{transition:none}}
 </style>
@@ -280,6 +293,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
       <div class="chips" id="fShift" role="group" aria-label="Смена"></div>
       <div id="fCheck"></div>
       <div id="fMeals"></div>
+      <div class="flog" id="fLog"></div>
       <div class="ftot" id="fTot"></div>
       <div class="fnote" id="fPhase"></div>
     </div>
@@ -531,7 +545,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 (function(){
   var state;
   try{ state = JSON.parse(document.getElementById('state').textContent) }catch(e){ state={} }
-  state.checks=state.checks||{}; state.bought=state.bought||{}; state.skin=state.skin||{}; state.start=state.start||'2026-11-04'; state.study=state.study||{}; state.water=state.water||{}; state.phil=state.phil||{}; state.reading=state.reading||{}; state.cycle=state.cycle||null; state.food=state.food||{}; state.shift=state.shift||{}; state.ita=state.ita||{};
+  state.checks=state.checks||{}; state.bought=state.bought||{}; state.skin=state.skin||{}; state.start=state.start||'2026-11-04'; state.study=state.study||{}; state.water=state.water||{}; state.phil=state.phil||{}; state.reading=state.reading||{}; state.cycle=state.cycle||null; state.food=state.food||{}; state.shift=state.shift||{}; state.ita=state.ita||{}; state.flog=state.flog||{};
   // перенос старых отметок (eve -> act)
   Object.keys(state.checks).forEach(function(k){ var r=state.checks[k]; if(r.eve){ r.act=true; delete r.eve } });
 
@@ -1151,6 +1165,11 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     return {ph:ph,sh:sh,meals:meals};
   }
   function sumD(ids){ var t=[0,0,0,0]; ids.forEach(function(i){ for(var k=0;k<4;k++) t[k]+=DISH[i][k+1] }); return t }
+  // дневник питания: записи, которые я добавила из чата (по фото), + ваши записи
+  var FLOG={
+    '2026-11-05':[{pre:1,slot:'ob',name:'Завтрак: овсянка на Planto с цукатами, рублеными орехами и арахисовой пастой; тост «Зерновик» со сливочным маслом; чёрный кофе',note:'по фото: овсянка ~50 г, Planto ~100 мл, орехи ~10 г, цукаты ~15 г, арахисовая паста ~15 г, хлеб ~40 г, масло ~10 г',k:650,p:18,f:31,c:72}]
+  };
+  function flogFor(key){ return (FLOG[key]||[]).concat((state.flog&&state.flog[key])||[]) }
   function renderFood(){
     var key=iso(sel), fd=foodDay(key), r=state.food[key]||{}, h='', all=[];
     var o=DAYS[key], free=o&&(o.away||o.bday||o.travelMorning||o.travelEve);
@@ -1158,14 +1177,25 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     $('fShift').innerHTML=['m','e','off'].map(function(s){ return '<button class="chip" type="button" style="--c:var(--olive)" data-shift="'+s+'" aria-pressed="'+(fd.sh===s)+'">'+SHN[s]+'</button>' }).join('');
     var dn=Math.round((parse(key)-parse(FOOD_START))/864e5);
     $('fCheck').innerHTML=(dn>0&&dn%14===0)?'<div class="fcheck"><b>Проверка самочувствия · 2 недели</b><br>Если есть хоть одно: цикл задерживается, выпадают волосы, постоянно холодно или нет сил, кружится голова, в зале падают веса, всё время тянет на сладкое — напишите мне, пересмотрим калории, и сдайте ферритин. Всё хорошо — продолжаем.</div>':'';
+    var log=flogFor(key), replaced={}, eaten=[0,0,0,0], rest=0;
+    log.forEach(function(e){ if(e.slot) replaced[e.slot]=1; eaten[0]+=e.k||0; eaten[1]+=e.p||0; eaten[2]+=e.f||0; eaten[3]+=e.c||0 });
     if(free) h+='<div class="fnote" style="margin-bottom:6px"><b>'+o.label[0].toUpperCase()+o.label.slice(1)+': без строгого меню</b>Ориентир: белок в каждый приём, хлеб с маслом и капучино как обычно, вода.</div>';
     fd.meals.forEach(function(m){
-      var ids=m.fx.concat(m.ids), t=sumD(ids), on=!!r[m.id]; all=all.concat(ids);
+      var ids=m.fx.concat(m.ids), t=sumD(ids), on=!!r[m.id], rp=replaced[m.id]; all=all.concat(ids);
+      if(rp){ h+='<div class="meal done"><div class="mt">'+(m.time||'')+'</div><div><div class="mn">'+m.name+'<span>в дневнике</span></div><ul><li class="fx">съели другое — смотрите дневник ниже</li></ul></div><span></span></div>'; return }
+      if(on){ eaten[0]+=t[0]; eaten[1]+=t[1]; eaten[2]+=t[2]; eaten[3]+=t[3] } else rest+=t[0];
       h+='<div class="meal'+(on?' done':'')+'"><div class="mt">'+(m.time||'по желанию')+'</div><div><div class="mn">'+m.name+'<span>'+Math.round(t[0])+' ккал</span></div><ul>'+
         m.ids.map(function(i){ return '<li>'+DISH[i][0]+'</li>' }).join('')+m.fx.map(function(i){ return '<li class="fx">'+DISH[i][0]+'</li>' }).join('')+
         '</ul></div><button class="ck" type="button" data-meal="'+m.id+'" aria-pressed="'+on+'" aria-label="Съедено: '+m.name+'"></button></div>';
     });
     $('fMeals').innerHTML=h;
+    var goal=1600, tot=Math.round(eaten[0]), lh='<h3>Дневник питания</h3>';
+    if(log.length) lh+=log.map(function(e,i){ var own=!e.pre, idx=i-(FLOG[key]||[]).length;
+      return '<div class="fl"><div>'+esc(e.name)+(e.note?'<small>'+esc(e.note)+'</small>':'')+(e.p!=null?'<small>Б '+e.p+' · Ж '+e.f+' · У '+e.c+'</small>':'')+'</div><b>'+e.k+' ккал</b>'+(own?'<button type="button" data-fdel="'+idx+'" aria-label="Удалить запись">×</button>':'<span></span>')+'</div>' }).join('');
+    else lh+='<div class="fsum" style="color:var(--muted)">Отмечайте приёмы пищи галочками в меню выше или добавьте то, что съели не по плану.</div>';
+    lh+='<div class="fsum"><b>Съедено '+tot+' ккал</b> (белки '+Math.round(eaten[1])+' г) · по плану ещё '+Math.round(rest)+' · итог дня ≈ '+(tot+Math.round(rest))+' из '+goal+'</div><div class="fbar"><i style="width:'+Math.min(100,tot/goal*100)+'%"></i></div>';
+    lh+='<div class="fadd"><input id="flName" placeholder="Что съели" aria-label="Что съели"><input id="flK" type="number" inputmode="numeric" placeholder="ккал" aria-label="Калории"><button type="button" id="flAdd">+</button></div>';
+    $('fLog').innerHTML=lh;
     var T=sumD(all);
     $('fTot').innerHTML=[['ккал',T[0]],['белки, г',T[1]],['жиры, г',T[2]],['углев., г',T[3]]].map(function(x){ return '<div><b>'+Math.round(x[1])+'</b>'+x[0]+'</div>' }).join('');
     $('fPhase').innerHTML='<b>Добавляйте в эту фазу</b>'+FPH[fd.ph].p+'.<br><br>'+FPH[fd.ph].tip+'<br><br><span style="color:var(--muted)">В Кофемании: «на пару, без масла, соус и заправку отдельно». Любое блюдо можно заменить похожим: рыба на рыбу, птица на птицу, гарнир на гарнир.</span>';
@@ -1197,6 +1227,8 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(t.id==='prevW'||t.id==='nextW'){ var n=t.id==='prevW'?-7:7; weekStart=add(weekStart,n); sel=add(sel,n); all(); return }
     if(t.dataset.date){ sel=parse(t.dataset.date); renderWeek(); renderTimeline(); renderSkin(); renderWater(); renderFood(); return }
     if(t.dataset.itl){ var ik=t.dataset.itl, ir=state.checks[ik]||(state.checks[ik]={}); ir.it=!ir.it; if(!ir.it) delete ir.it; if(!Object.keys(ir).length) delete state.checks[ik]; all(); persist(); return }
+    if(t.id==='flAdd'){ var nm=$('flName').value.trim(), kc=parseInt($('flK').value,10); if(!nm||!(kc>0)) return; var fk2=iso(sel); state.flog=state.flog||{}; (state.flog[fk2]=state.flog[fk2]||[]).push({name:nm,k:kc}); renderFood(); persist(); return }
+    if(t.dataset.fdel!=null){ var fk3=iso(sel), arr=(state.flog||{})[fk3]||[]; arr.splice(+t.dataset.fdel,1); if(!arr.length&&state.flog) delete state.flog[fk3]; renderFood(); persist(); return }
     if(t.dataset.shift){ var fk=iso(sel); state.shift[fk]=t.dataset.shift; renderFood(); persist(); return }
     if(t.dataset.meal){ var mk=iso(sel), fr=state.food[mk]||(state.food[mk]={}); fr[t.dataset.meal]=!fr[t.dataset.meal]; if(!fr[t.dataset.meal]) delete fr[t.dataset.meal]; if(!Object.keys(fr).length) delete state.food[mk]; renderFood(); persist(); return }
     if(t.dataset.gl||t.id==='wPlus'||t.id==='wMinus'){ var wk2=iso(sel), cur=state.water[wk2]||0, nv;
