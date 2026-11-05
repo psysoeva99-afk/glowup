@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Glow Up">
+<meta name="theme-color" content="#F7F5F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141316" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body></head><body>
+<title>Glow Up</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&amp;display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: мобильное приложение в одну колонку (до 460px), неделя сверху, таймлайн дня, нижняя навигация */
+:root{
+  --bg:#F7F5F2; --surface:#FFFFFF; --soft:#F0ECE7; --fg:#1F1D22; --muted:#8B8690; --line:#E9E4DE;
+  --coral:#EF857B; --coral-soft:#FCE3E0; --blue:#5F86B5; --navy:#26466B; --plum:#8C3A5F;
+  --green:#83BD67; --yellow:#FFC23A; --lilac:#CFC0F6; --pink:#F8D3D6; --brown:#6E3E36; --olive:#79735F;
+  --violet:#7B5CD6; --violet-soft:#ECE6FB; --teal:#2F9C8F; --teal-soft:#DDF1EE; --aqua:#3A9BDC; --aqua-soft:#DCEEFA; --amber:#C9822B; --amber-soft:#F7E9D5;
+  --font:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141316; --surface:#201E23; --soft:#2A272D; --fg:#F2EFEA; --muted:#9D98A3; --line:#332F37;
+  --coral:#F2938A; --coral-soft:#3B2524; --blue:#7FA3CF; --navy:#5A80AE; --plum:#C0628D;
+  --green:#95CC7B; --yellow:#FFCB55; --lilac:#9C8BD6; --pink:#5A3A40; --brown:#A76A5E; --olive:#A39C85; --violet:#A48BF0; --violet-soft:#2E2742; --teal:#5CC4B6; --teal-soft:#1C3532; --aqua:#6BB8EC; --aqua-soft:#1B2E3D; --amber:#E6A75A; --amber-soft:#3A2C1B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141316; --surface:#201E23; --soft:#2A272D; --fg:#F2EFEA; --muted:#9D98A3; --line:#332F37;
+  --coral:#F2938A; --coral-soft:#3B2524; --blue:#7FA3CF; --navy:#5A80AE; --plum:#C0628D;
+  --green:#95CC7B; --yellow:#FFCB55; --lilac:#9C8BD6; --pink:#5A3A40; --brown:#A76A5E; --olive:#A39C85; --violet:#A48BF0; --violet-soft:#2E2742; --teal:#5CC4B6; --teal-soft:#1C3532; --aqua:#6BB8EC; --aqua-soft:#1B2E3D; --amber:#E6A75A; --amber-soft:#3A2C1B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.app{max-width:460px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 110px}
+button{font-family:inherit;color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.view{display:flex;flex-direction:column;gap:18px}
+h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+h1 .acc{color:var(--coral)}
+h2{font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px;margin:4px 0 0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.link{font-size:13px;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px}
+
+/* неделя */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.wd{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer;padding:4px 0}
+.wd .n{font-size:12px;color:var(--muted)}
+.wd .d{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:16px}
+.wd[aria-current="date"] .d{outline:1.5px solid var(--line)}
+.wd[aria-pressed="true"] .d{background:var(--coral);color:#fff;outline:0}
+.dots{display:flex;gap:2px;height:5px;max-width:100%;flex-wrap:wrap;justify-content:center}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--c)}
+.weeknav{display:flex;gap:6px}
+.weeknav button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:16px;line-height:1}
+
+/* быстрые кнопки */
+.quick{display:flex;gap:18px;overflow-x:auto;padding-bottom:2px}
+.qb{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer;min-width:72px}
+.qb .c{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.qb span{font-size:12px;font-weight:600;text-align:center;line-height:1.2}
+
+/* таймлайн */
+.sheet{background:var(--surface);border-radius:28px;padding:18px 16px 12px;display:flex;flex-direction:column;gap:2px}
+.part{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 0 8px 58px}
+.step{display:grid;grid-template-columns:42px 52px 1fr 36px;align-items:center;column-gap:8px;min-height:62px;position:relative}
+.time{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;align-self:start;padding-top:8px}
+.rail{position:relative;display:flex;justify-content:center;align-self:stretch}
+.rail::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;background:var(--line)}
+.step:first-of-type .rail::before{top:24px}
+.ic{position:relative;width:48px;height:48px;border-radius:24px;display:grid;place-items:center;color:#fff;margin:6px 0;background:var(--c)}
+.ic.tall{height:92px}
+.ic svg{width:22px;height:22px}
+.step.done .ic{opacity:.45}
+.info{min-width:0;padding:6px 0}
+.info .meta{font-size:12px;color:var(--muted)}
+.info .t{font-weight:700;font-size:16px}
+.info .hint{font-size:12px;color:var(--muted)}
+.step.done .t{text-decoration:line-through;text-decoration-thickness:1.5px;color:var(--muted)}
+.ck{width:30px;height:30px;border-radius:50%;border:2px solid var(--c);background:transparent;cursor:pointer;display:grid;place-items:center;padding:0}
+.ck[aria-pressed="true"]{background:var(--c)}
+.ck[aria-pressed="true"]::after{content:"";width:10px;height:6px;border:2.5px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.daydone{font-size:13px;color:var(--muted);text-align:center;padding:6px 0 2px}
+
+/* трекеры */
+.card{background:var(--surface);border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.big{font-size:56px;font-weight:800;letter-spacing:-.03em;line-height:1;text-align:center;font-variant-numeric:tabular-nums}
+.bigsub{text-align:center;color:var(--muted);font-size:14px}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end}
+.bar{display:flex;flex-direction:column;align-items:center;gap:8px}
+.tube{width:100%;max-width:70px;height:190px;border-radius:36px;background:var(--soft);position:relative;overflow:hidden}
+.tube .f{position:absolute;left:0;right:0;bottom:0;border-radius:36px;background:var(--c);transition:height .4s}
+.tube .p{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:13px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+.tube .p.dark{color:var(--fg)}
+.bar .l{font-size:13px;text-align:center;line-height:1.2}
+.bar .x{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:0;border-radius:999px;padding:9px 14px;font-weight:600;font-size:14px;background:var(--soft);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--c);color:#fff}
+.sleep{display:flex;align-items:center;gap:10px}
+.sleep button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:18px;cursor:pointer}
+.sleep b{font-size:22px;min-width:70px;text-align:center;font-variant-numeric:tabular-nums}
+.hist{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.hist div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.hist i{width:100%;aspect-ratio:1;max-width:20px;border-radius:50%;background:var(--soft)}
+.hist span{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.journey{display:flex;flex-direction:column;gap:10px}
+.jtrack{height:12px;border-radius:99px;background:var(--soft);overflow:hidden}
+.jtrack div{height:100%;background:var(--yellow);border-radius:99px}
+.miles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mile{border-radius:16px;padding:10px;background:var(--soft);font-size:12px;line-height:1.3}
+.mile b{display:block;font-size:13px;margin-bottom:2px}
+.mile.on{background:var(--c);color:#1F1D22}
+
+/* покупки */
+.pgroup{display:flex;flex-direction:column;gap:10px}
+.pgroup h3{margin:6px 0 0;font-size:15px}
+.pcard{border-radius:22px;padding:14px 16px;background:var(--c);color:#1F1D22;display:grid;grid-template-columns:1fr auto;gap:6px 12px}
+.pcard .nm{font-weight:700;font-size:16px;min-width:0}
+.pcard .why{font-size:13px;opacity:.82;grid-column:1/-1}
+.pcard .pr{font-size:13px;font-weight:600;grid-column:1/-1}
+.pcard .ln{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.pcard .ln a{font-size:12px;font-weight:600;color:#1F1D22;background:rgba(255,255,255,.65);border-radius:999px;padding:5px 10px;text-decoration:none}
+.pcard .tag{font-size:11px;font-weight:700;background:#fff;border-radius:999px;padding:4px 9px;align-self:start}
+.pcard .ck{border-color:#1F1D22;--c:#1F1D22}
+.pcard.done{opacity:.55}
+.pcard.done .nm{text-decoration:line-through}
+
+/* гид */
+.guide{display:flex;flex-direction:column;gap:10px}
+.gcard{border-radius:22px;padding:16px;background:var(--c);color:#1F1D22}
+.gcard h3{margin:0 0 8px;font-size:17px}
+.gcard ol,.gcard ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.tbl{overflow-x:auto;background:var(--surface);border-radius:22px;padding:12px}
+table{border-collapse:collapse;width:100%;min-width:380px;font-size:13px}
+th,td{padding:7px 4px;text-align:center;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:600;font-size:12px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c)}
+
+/* нижняя навигация */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.navin{max-width:460px;margin:0 auto;display:flex;align-items:center;gap:10px;pointer-events:auto}
+.bar5{flex:1;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-radius:26px;padding:8px 6px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+.tab{background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted);padding:4px 0}
+.tab svg{width:22px;height:22px}
+.tab[aria-selected="true"]{color:var(--coral)}
+.fab{width:60px;height:60px;border-radius:50%;border:0;background:var(--coral);color:#fff;font-size:30px;line-height:1;cursor:pointer;box-shadow:0 8px 22px rgba(239,133,123,.45);flex:none}
+.save{font-size:12px;color:var(--muted);text-align:center;min-height:16px}
+/* курс */
+.course-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.status{font-size:12px;font-weight:700;border-radius:999px;padding:5px 10px;white-space:nowrap;background:var(--violet-soft);color:var(--violet)}
+.status.late{background:var(--coral-soft);color:var(--coral)}
+.ctrack{height:12px;border-radius:99px;background:var(--soft);overflow:hidden}
+.ctrack div{height:100%;background:var(--violet);border-radius:99px;transition:width .4s}
+.cnums{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.topics{display:flex;flex-direction:column}
+.topic{display:grid;grid-template-columns:28px 1fr auto 34px;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.topic:last-child{border-bottom:0}
+.topic .no{font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.topic .nm{font-size:14px;font-weight:600;min-width:0}
+.topic .dl{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.topic.now{background:var(--violet-soft);border-radius:14px;margin:0 -8px;padding:10px 8px;border-bottom-color:transparent}
+.topic.now .dl{color:var(--violet);font-weight:700}
+.topic.done .nm{text-decoration:line-through;color:var(--muted)}
+.topic .ck{--c:var(--violet);width:28px;height:28px}
+.amber .status{background:var(--amber-soft);color:var(--amber)}
+.amber .ctrack div{background:var(--amber)}
+.amber .topic.now{background:var(--amber-soft)}
+.amber .topic.now .dl{color:var(--amber)}
+.amber .topic .ck{--c:var(--amber)}
+.amber .btn{background:var(--amber)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn.ghost{background:var(--amber-soft);color:var(--amber)}
+.brk{font-size:12px;color:var(--muted);padding:8px 0 8px 38px;border-bottom:1px solid var(--line)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:999px;padding:11px 16px;font-weight:700;font-size:14px;text-decoration:none;background:var(--violet);color:#fff}
+/* вода */
+.water{background:var(--surface);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.wtop{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wtop h2{font-size:17px}
+.wamt{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wamt b{font-size:22px;color:var(--aqua);font-weight:800}
+.glasses{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.gl{aspect-ratio:3/4;border:2px solid var(--aqua);border-radius:4px 4px 10px 10px;background:transparent;padding:0;cursor:pointer;position:relative;overflow:hidden;max-width:34px;width:100%;justify-self:center}
+.gl[aria-pressed="true"]{background:var(--aqua)}
+.gl.extra{border-style:dashed}
+.wbtns{display:flex;gap:8px;align-items:center}
+.wbtns button{border:0;border-radius:999px;padding:9px 14px;font-weight:700;font-size:14px;cursor:pointer;background:var(--aqua-soft);color:var(--aqua)}
+.wbtns .wnote{font-size:12px;color:var(--muted);margin-left:auto;text-align:right}
+.wweek{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:130px}
+.wcol{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.wcol .tb{width:100%;max-width:30px;background:var(--soft);border-radius:10px;flex:1;position:relative;overflow:hidden}
+.wcol .tb i{position:absolute;left:0;right:0;bottom:0;background:var(--aqua);border-radius:10px}
+.wcol span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+/* тренировки */
+.fitstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fs{background:var(--teal-soft);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.fs b{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--teal)}
+.fs span{font-size:12px;color:var(--muted);line-height:1.25}
+.upc{display:flex;flex-direction:column}
+.up{display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.up:last-child{border-bottom:0}
+.up .n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:var(--teal)}
+.up .nm{font-weight:600;font-size:14px;min-width:0}
+.up .when{font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.up.first{background:var(--teal-soft);border-radius:14px;margin:0 -8px;padding:10px 8px;border-bottom-color:transparent}
+.up.first .when{color:var(--teal);font-weight:700}
+.meal{display:grid;grid-template-columns:48px 1fr 30px;gap:10px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.meal .mt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.meal .mn{font-weight:700;font-size:15px;display:flex;justify-content:space-between;gap:8px}
+.meal .mn span{font-weight:600;font-size:12px;color:var(--muted);white-space:nowrap}
+.meal ul{margin:4px 0 0;padding-left:16px;font-size:13.5px;display:flex;flex-direction:column;gap:3px}
+.meal ul .fx{color:var(--muted)}
+.meal .ck{--c:var(--green)}
+.meal.done .mn{text-decoration:line-through;text-decoration-color:var(--muted)}
+.ftot{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.ftot div{background:var(--soft);border-radius:14px;padding:8px 4px;font-size:11px;color:var(--muted)}
+.ftot b{display:block;font-size:17px;color:var(--fg)}
+.fnote{background:var(--green-soft,var(--soft));border-radius:16px;padding:12px 14px;font-size:13.5px;line-height:1.45}
+.fnote b{display:block;margin-bottom:2px}
+.fcheck{background:var(--coral-soft,var(--soft));border-radius:16px;padding:12px 14px;font-size:13.5px;line-height:1.45}
+@media (prefers-reduced-motion:reduce){.tube .f,.ctrack div{transition:none}}
+</style>
+
+<div class="app">
+  <section class="view" id="v-today">
+    <div class="row">
+      <div><h1 id="dateTitle"></h1><p class="sub" id="dateSub"></p></div>
+      <div class="weeknav"><button id="prevW" aria-label="Предыдущая неделя">‹</button><button id="nextW" aria-label="Следующая неделя">›</button></div>
+    </div>
+    <div class="week" id="week"></div>
+    <div class="quick">
+      <button class="qb" data-go="skin"><span class="c" style="background:var(--green)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"></path></svg></span><span>Дневник<br>кожи</span></button>
+      <button class="qb" data-go="fit"><span class="c" style="background:var(--teal)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 7v10M18 7v10M3 9v6M21 9v6M6 12h12"></path></svg></span><span>Трени-<br>ровки</span></button>
+      <button class="qb" data-go="art"><span class="c" style="background:var(--violet)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21V10M19 21V10M9 21v-8M15 21v-8M3 10l9-6 9 6z"></path></svg></span><span>История<br>искусства</span></button>
+      <button class="qb" data-go="phil"><span class="c" style="background:var(--amber)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"></path><path d="M12 6v14"></path></svg></span><span>Философия</span></button>
+      <button class="qb" data-go="food"><span class="c" style="background:var(--olive)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16a8 8 0 0 1-16 0z"></path><path d="M9 7c0-2 2-2 2-4M14 7c0-2 2-2 2-4"></path></svg></span><span>Питание</span></button>
+      <button class="qb" data-go="trackers"><span class="c" style="background:var(--coral)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg></span><span>Итоги<br>недели</span></button>
+      <button class="qb" data-go="shop"><span class="c" style="background:var(--yellow)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg></span><span>Список<br>покупок</span></button>
+      <button class="qb" data-go="guide"><span class="c" style="background:var(--lilac)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"></path><path d="M9 9h6M9 13h4"></path></svg></span><span>Как<br>делать</span></button>
+    </div>
+    <div class="water" id="waterCard">
+      <div class="wtop"><h2>Вода</h2><div class="wamt"><b id="wNow">0</b> / <span id="wGoal">2,0</span> л</div></div>
+      <div class="glasses" id="glasses"></div>
+      <div class="wbtns"><button type="button" id="wPlus">+ стакан</button><button type="button" id="wMinus" aria-label="Убрать стакан">−</button><span class="wnote" id="wNote"></span></div>
+    </div>
+    <div class="sheet" id="timeline"></div>
+    <div class="card" id="food">
+      <div><h2>Питание · 1400 ккал</h2><p class="sub" id="fSub"></p></div>
+      <div class="chips" id="fShift" role="group" aria-label="Смена"></div>
+      <div id="fCheck"></div>
+      <div id="fMeals"></div>
+      <div class="ftot" id="fTot"></div>
+      <div class="fnote" id="fPhase"></div>
+    </div>
+    <div class="save" id="save1" aria-live="polite"></div>
+  </section>
+
+  <section class="view" id="v-trackers" hidden="">
+    <div><h1>Трекеры</h1><p class="sub" id="trWeek"></p></div>
+    <div class="card">
+      <div class="big" id="streak">0</div>
+      <div class="bigsub" id="streakSub">дней подряд с SPF</div>
+    </div>
+    <div class="card" id="nowreading">
+      <div class="course-head">
+        <div><h2>Сейчас читаю</h2><p class="sub" id="nrSub"></p></div>
+        <span class="status" id="nrStatus" style="background:var(--soft);color:var(--fg)">в метро</span>
+      </div>
+      <div class="btns"><button class="btn" type="button" id="nrDone" style="border:0;cursor:pointer;background:var(--olive)">Дочитала</button></div>
+    </div>
+    <div class="card" id="fit">
+      <div class="course-head">
+        <div><h2>Тренировки</h2><p class="sub">Через день: зал и дом по очереди, нагрузка по циклу</p></div>
+      </div>
+      <div class="fs" style="background:var(--pink);flex-direction:row;align-items:center;gap:12px">
+        <b id="cycDay" style="color:var(--fg);font-size:28px;min-width:38px;text-align:center">—</b>
+        <div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="color:var(--fg);font-weight:600;font-size:13px">день цикла</span><span id="cycPhase" style="color:var(--fg)"></span><span id="cycNext"></span></div>
+      </div>
+      <div class="btns"><button class="btn" type="button" id="cycBtn" style="border:0;cursor:pointer;background:var(--coral)">Месячные начались сегодня</button></div>
+      <div class="fitstats">
+        <div class="fs"><b id="fitWeek">0/0</b><span>на этой неделе</span></div>
+        <div class="fs"><b id="fitTotal">0</b><span>всего сделано</span></div>
+        <div class="fs"><b id="fitMonth">0%</b><span>за 30 дней</span></div>
+      </div>
+      <div class="upc" id="fitNext"></div>
+    </div>
+    <div class="card" id="waterWeek">
+      <div><h2>Вода за неделю</h2><p class="sub" id="wwSub">Цель 2 л, в дни тренировок 2,5 л</p></div>
+      <div class="wweek" id="wweek"></div>
+    </div>
+    <div class="card" id="art">
+      <div class="course-head">
+        <div><h2>История искусства</h2><p class="sub">ВШЭ · «Введение в историю искусства» · 11 тем</p></div>
+        <span class="status" id="artStatus">по плану</span>
+      </div>
+      <div class="ctrack"><div id="artFill" style="width:0"></div></div>
+      <div class="cnums"><span id="artDone">0 из 11 тем</span><span>финиш 24 янв</span></div>
+      <p class="sub" id="artNow" style="margin:0"></p>
+      <div class="topics" id="topics"></div>
+      <div><a class="btn" href="https://apps.openedu.ru/learning/course/course-v1:hse+ART+2022/block-v1:hse+ART+2022+type@sequential+block@4140cf9334694750ab1ffbaab672ed80/block-v1:hse+ART+2022+type@vertical+block@badb5f5a066b47bfbbfa9590accd8a56" target="_blank" rel="noopener">Открыть курс ↗</a></div>
+    </div>
+    <div class="card amber" id="phil">
+      <div class="course-head">
+        <div><h2>Философия</h2><p class="sub">ВШЭ · «Философия: расширенный курс» · 15 тем</p></div>
+        <span class="status" id="phStatus">по плану</span>
+      </div>
+      <div class="ctrack"><div id="phFill" style="width:0"></div></div>
+      <div class="cnums"><span id="phDone">0 из 15 тем</span><span>финиш 28 фев</span></div>
+      <p class="sub" id="phNow" style="margin:0"></p>
+      <div class="topics" id="phTopics"></div>
+      <div class="btns"><a class="btn" href="https://openedu.ru/course/hse/PHIL/" target="_blank" rel="noopener">Открыть курс ↗</a><a class="btn ghost" href="https://www.youtube.com/playlist?list=PLm4edsJMubIdEeze31p-JGaP4uBahnoy3" target="_blank" rel="noopener">Лекции на YouTube ↗</a></div>
+    </div>
+    <div class="card">
+      <div><h2>Процедуры за неделю</h2><p class="sub">Сколько сделано из плана</p></div>
+      <div class="bars" id="bars"></div>
+    </div>
+    <div class="card" id="skin">
+      <div><h2>Дневник кожи</h2><p class="sub" id="skinDay"></p></div>
+      <div class="chips" id="skinChips"></div>
+      <div class="row"><span style="font-weight:600">Сон</span>
+        <div class="sleep"><button id="sleepMinus" aria-label="Меньше сна">−</button><b id="sleepVal">—</b><button id="sleepPlus" aria-label="Больше сна">+</button></div>
+      </div>
+      <div>
+        <div class="hist" id="hist"></div>
+        <div class="legend" id="legend" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div><h2>Путь к результату</h2><p class="sub" id="jSub"></p></div>
+      <div class="journey">
+        <div class="jtrack"><div id="jFill" style="width:0"></div></div>
+        <div class="miles" id="miles"></div>
+      </div>
+    </div>
+    <div class="save" id="save2" aria-live="polite"></div>
+  </section>
+
+  <section class="view" id="v-shop" hidden="">
+    <div><h1>Покупки</h1><p class="sub">По каталогу «Золотого Яблока» на 4 ноября. Часть позиций была не в наличии, поэтому у каждого шага есть замена. Цены сверяйте на сайте.</p></div>
+    <div id="shop" style="display:flex;flex-direction:column;gap:14px"></div>
+  </section>
+
+  <section class="view" id="v-guide" hidden="">
+    <div><h1>Как делать</h1><p class="sub">Распорядок, график и образ жизни</p></div>
+    <div class="gcard" style="--c:#E3EBD3"><h3>Питание · 1400 ккал</h3><ul>
+      <li><b>Меню на сегодня — на главной, под планом.</b> Оно меняется по фазе цикла и смене: 7–15 — завтрак и обед на работе, ужин дома; 15–23 — завтрак дома, обед и ужин на работе.</li>
+      <li><b>Хлеб с маслом и капучино — каждый день.</b> Они уже учтены: около 210 ккал.</li>
+      <li><b>Белок в каждом приёме</b>, около 90–120 г в день. На дефиците он сохраняет мышцы и нужен коже.</li>
+      <li><b>В ресторане:</b> «на пару, без масла, соус и заправку отдельно». Гарнир — гречка, рис, батат или овощи.</li>
+      <li><b>Честно про питание по циклу:</b> доказательства пока скромные. Важно другое: железо в месячные, кальций и магний перед ними, достаточно белка. Остальное — способ разнообразить меню.</li>
+      <li><b>Раз в 2 недели проверка.</b> Задержка цикла, выпадают волосы, постоянно холодно или нет сил, кружится голова, падают веса в зале — поднимаем до 1600 ккал и сдаём ферритин.</li></ul></div>
+    <div class="gcard" style="--c:var(--coral-soft)"><h3>Правила без торга</h3><ul>
+      <li><b>Не решать, а смотреть в план.</b> Если в плане метро — значит книга, если обед — значит зал. Вопроса «хочу ли я» нет.</li>
+      <li><b>Минимум вместо пропуска.</b> Совсем нет сил — сделайте 10 минут: одну главу, одну лекцию, разминку. Цепочка важнее объёма.</li>
+      <li><b>Пятница вечером свободна.</b> Это часть плана, а не слабость.</li>
+      <li><b>Пропустили — не догоняйте двойной нормой.</b> Просто следующий пункт по плану.</li>
+      <li><b>Дорога — это учёба.</b> 2 часа метро в день дают около 8 часов в неделю на книги и лекции, и вечера остаются свободными.</li></ul></div>
+    <div class="guide">
+      <div class="gcard" style="--c:var(--yellow)"><h3>Утро · 5–10 минут</h3><ol>
+        <li><b>Умывание</b> мягким гелем.</li>
+        <li><b>Эссенция NUNKORO</b>.</li>
+        <li><b>Anua ниацинамид + TXA</b>; с 26 ноября по вт и сб вместо него <b>VT Vita-Light Reedle Shot</b>.</li>
+        <li><b>Round Lab Birch Juice</b>.</li>
+        <li><b>Патчи D'Alba</b> на 15–20 минут, пока собираетесь.</li>
+        <li><b>SPF</b> последним шагом. Если кожа сухая, до него тонкий слой Atoderm.</li></ol></div>
+      <div class="gcard" style="--c:var(--lilac)"><h3>Вечер · 5–10 минут</h3><ol>
+        <li><b>Очищение</b>: смыть SPF и макияж.</li>
+        <li><b>Эссенция NUNKORO</b>.</li>
+        <li><b>Актив по графику</b>: Celimax (пн, ср), с 26 ноября ещё маска VT Cica Reti-A (пт) и VT Collagen Reedle Shot (чт).</li>
+        <li><b>Round Lab Birch Juice</b> (кроме вечеров ретинола).</li>
+        <li><b>Крем</b>: Bioderma Atoderm; по вт и сб — By Wishtrend с бакучиолом.</li></ol></div>
+      <div class="gcard" style="--c:var(--pink)"><h3>Как вводить средства</h3><ul>
+        <li><b>5–11 ноября: база.</b> Очищение, эссенция, Anua, берёзовый сок, патчи, Atoderm. Кожа привыкает, барьер восстанавливается.</li>
+        <li><b>12–25 ноября: ретинол.</b> Celimax 0,1% в пн и ср, бакучиол во вт и сб.</li>
+        <li><b>С 26 ноября: полная схема.</b> Плюс маска Reti-A в пт, Collagen Reedle в чт, Vita-Light утром во вт и сб.</li>
+        <li><b>Новое средство — сначала тест:</b> капля за ухом или на линии челюсти на сутки.</li>
+        <li><b>Не смешивать в один вечер</b> ретинол, маску Reti-A и микроиглы VT. Если кожа покраснела или щиплет, 2–3 дня только Atoderm, потом продолжить.</li>
+        <li><b>Без SPF</b> ретинол, ниацинамид и микроиглы не начинать.</li></ul></div>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr></thead>
+      <tbody id="plan"></tbody></table></div>
+    <div class="gcard" style="--c:var(--aqua-soft)"><h3>Вода · 2–2,5 л в день</h3><ul>
+      <li>Расчёт: 60 кг × 30–35 мл ≈ <b>1,8–2,1 л</b>. Цель на обычный день <b>2 л, 8 стаканов по 250 мл</b>.</li>
+      <li>В день тренировки <b>+0,5 л, всего 2,5 л (10 стаканов)</b>: пейте понемногу до, во время и после зала.</li>
+      <li>Чай, вода с лимоном и суп тоже считаются; кофе и алкоголь лучше не засчитывать.</li>
+      <li>Лучший ориентир: моча светло-соломенного цвета. Пить через силу больше нормы не нужно.</li>
+      <li>Последний большой стакан за 1–2 часа до сна, чтобы утром не было отёков.</li></ul></div>
+    <div class="gcard" style="--c:#DCEFD0"><h3>Йога и растяжка · 25 минут</h3><ol>
+      <li><b>Дыхание</b>, 2 мин: сидя, вдох на 4 счёта, выдох на 6.</li>
+      <li><b>Кошка–корова</b>, 1 мин: на четвереньках округлять и прогибать спину на дыхании.</li>
+      <li><b>Поза ребёнка</b>, 1 мин: таз на пятки, руки вперёд.</li>
+      <li><b>Собака мордой вниз</b>, 1 мин: колени можно согнуть, переминаться с ноги на ногу.</li>
+      <li><b>Низкий выпад</b>, 1 мин на сторону: колено на полу, таз вперёд — сгибатели бедра после сидячего дня.</li>
+      <li><b>Полушпагат</b>, 1 мин на сторону: из выпада таз назад, передняя нога прямая — задняя поверхность.</li>
+      <li><b>Голубь</b>, 1,5 мин на сторону: ягодицы. Если тянет колено, делайте лёжа: лодыжка на колено другой ноги.</li>
+      <li><b>Сфинкс</b>, 1 мин: лёжа на животе, на предплечьях, плечи вниз — для осанки.</li>
+      <li><b>Нить в иголку</b>, 1 мин на сторону: на четвереньках рука под другую, плечо на пол — лопатки и грудной отдел.</li>
+      <li><b>Наклон сидя к ногам</b>, 1 мин: спина длинная, тянемся грудью, а не головой.</li>
+      <li><b>Скрутка лёжа</b>, 1 мин на сторону: колени в одну сторону, взгляд в другую.</li>
+      <li><b>Ноги на стену</b>, 3 мин: таз у стены, ноги вверх — снимает отёки ног после смены.</li>
+      <li><b>Шавасана</b>, 2 мин: лёжа, просто дышать.</li></ol>
+      <ul style="margin-top:10px">
+      <li><b>В дни месячных</b>: дыхание, кошка–корова, поза ребёнка, низкий выпад, голубь лёжа, скрутка лёжа, шавасана — мягко и по самочувствию. Поза ребёнка и скрутка часто облегчают спазмы.</li>
+      <li>Растяжка не должна болеть: тянет — хорошо, режет или стреляет — ослабить. Не пружинить, дышать ровно.</li>
+      <li>Бонус для осанки: после смены достаточно 5 минут — сфинкс, нить в иголку и ноги на стену.</li></ul></div>
+    <div class="gcard" style="--c:var(--teal-soft)"><h3>Тренировки · через день</h3><ol>
+      <li><b>Зал:</b> ягодицы + задняя поверхность</li>
+      <li><b>Дома:</b> ягодицы, спина, плечи, кор</li>
+      <li><b>Зал:</b> верх + кор</li>
+      <li><b>Дома:</b> ноги, плечи, осанка</li>
+      <li><b>Зал:</b> ягодицы + ноги</li>
+      <li><b>Дома:</b> ягодицы, спина, кор</li>
+      <li><b>Зал:</b> кардио, дорожка + бассейн</li>
+      <li><b>Дома:</b> йога и растяжка</li></ol>
+      <ul style="margin-top:10px">
+      <li>Тренировка через день, круг из 8 занимает 16 дней: в неделю выходит 1–2 зала и 1–2 домашних, вместо 3–4 залов.</li>
+      <li><b>По циклу.</b> 1–2 день месячных: вместо любой тренировки йога и растяжка. 3–5 день: зал заменяется домашней тренировкой вполсилы, кардио — прогулкой. После месячных и до овуляции сил больше всего, можно прибавлять веса. Перед месячными без рекордов.</li>
+      <li>Это ориентир, а не правило: исследования о тренировках по циклу пока скромные, главное — самочувствие. Чувствуете силы — тренируйтесь по плану.</li>
+      <li>Когда начнутся месячные, нажмите «Месячные начались сегодня» в Трекерах, и план подстроится. Длину цикла я взяла 29 дней по вашему Flo.</li>
+      <li>Домашние — вечером, примерно 40 минут, нужен только коврик (резинка и гантели по желанию).</li>
+      <li>Зал: в будни в обед (вход до 17:00), в выходные в 13:00. В будни кардио можно сократить до дорожки 30–40 минут.</li>
+      <li>Если пропустили, не сдвигайте круг: просто идите дальше по плану.</li>
+      <li>В день бассейна вечером хорошо смыть хлор и взять крем погуще. Если кожа щиплет, ретинол в этот вечер пропустите.</li></ul></div>
+    <div class="gcard" style="--c:var(--amber-soft)"><h3>Философия · как учиться</h3><ul>
+      <li>Курс ВШЭ на «Открытом образовании»: 15 тем от античности до философии искусства, около 4 часов в неделю. Смотреть лекции бесплатно; платить (3 600 ₽) нужно только за сертификат с экзаменом. Курс открыт до 31 декабря 2029.</li>
+      <li><b>Пн–чт, метро домой</b>: лекции курса, их можно смотреть или слушать в наушниках. <b>Вт и чт, метро на работу</b>: Рассел, глава к теме недели. <b>Воскресенье 11:00–11:45</b>: конспект и тест. Одна тема в неделю.</li>
+      <li>Античность и Средневековье идут в одни недели с историей искусства, так два курса дополняют друг друга.</li>
+      <li>28 декабря – 3 января перерыв, как и у истории искусства. Финиш 28 февраля 2027, всего около 55–60 часов.</li></ul></div>
+    <div class="gcard" style="--c:var(--violet-soft)"><h3>История искусства · как учиться</h3><ul>
+      <li>Курс ВШЭ: 11 тем, по плану авторов 1–2 часа в неделю. Записываться и сдавать можно до 31 октября 2030, но лучше держать темп: одна тема в неделю.</li>
+      <li><b>Пн, ср, пт, метро на работу</b>: Гомбрих, глава к эпохе недели. Сначала дочитать мемуары Юсупова, потом начинать Гомбриха.</li>
+      <li><b>Суббота 11:00–12:30</b>: лекции темы и тест (здесь нужны картинки, поэтому дома). Отметьте тему в трекере.</li>
+      <li>28 декабря – 3 января нет новой темы: можно догнать пропущенное или отдохнуть.</li>
+      <li>Финиш 24 января 2027, всего около 18–22 часов.</li></ul></div>
+    <div class="gcard" style="--c:var(--pink)"><h3>Правила</h3><ul>
+      <li>Микротоки 5 раз в неделю первые 2 месяца, потом достаточно 3.</li>
+      <li>Ретинол начинайте с 2–3 вечеров; если кожа спокойна через месяц, можно чаще.</li>
+      <li>Кислоты и ретинол в один вечер не наносите.</li>
+      <li>При беременности ретинол и микротоки не используйте.</li></ul></div>
+    <div class="gcard" style="--c:#CFE6C2"><h3>Образ жизни</h3><ul>
+      <li><b>Сон 7–9 часов.</b> Недосып сразу виден по отёкам.</li>
+      <li><b>Вечером меньше соли и алкоголя.</b></li>
+      <li><b>Белок в каждом приёме пищи.</b></li>
+      <li><b>Жирная рыба 2 раза в неделю</b> или омега-3.</li>
+      <li><b>Овощи и ягоды разных цветов.</b></li>
+      <li><b>Меньше сахара</b>: он ускоряет разрушение коллагена.</li>
+      <li><b>Сдать анализы</b> на витамин D и ферритин.</li></ul></div>
+    <div class="card">
+      <div><h2>Резервная копия</h2><p class="sub">Отметки хранятся на этом телефоне. Раз в пару недель сохраняйте копию, чтобы ничего не потерять при очистке Safari или смене телефона.</p></div>
+      <div class="chips">
+        <button class="chip" id="exportBtn" type="button" style="--c:var(--coral)">Сохранить копию</button>
+        <label class="chip" for="importFile" style="cursor:pointer">Восстановить из файла</label>
+        <input id="importFile" type="file" accept="application/json,.json" hidden>
+      </div>
+      <div class="save" id="bkMsg" aria-live="polite" style="text-align:left"></div>
+    </div>
+  </section>
+</div>
+
+<nav class="nav"><div class="navin">
+  <div class="bar5" role="tablist">
+    <button class="tab" role="tab" data-view="today" id="t-today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h3M4 12h3M4 18h3M10 6h10M10 12h10M10 18h10"></path></svg>Сегодня</button>
+    <button class="tab" role="tab" data-view="trackers" id="t-trackers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>Трекеры</button>
+    <button class="tab" role="tab" data-view="shop" id="t-shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg>Покупки</button>
+    <button class="tab" role="tab" data-view="guide" id="t-guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"></path></svg>Гид</button>
+  </div>
+  <button class="fab" id="fab" aria-label="Записать состояние кожи">+</button>
+</div></nav>
+
+<script id="state" type="application/json">{"checks":{},"bought":{},"skin":{"2026-11-04":{"tags":[],"sleep":8}},"start":"2026-11-04","study":{},"water":{},"phil":{}}</script>
+<script>
+(function(){
+  var state;
+  try{ state = JSON.parse(document.getElementById('state').textContent) }catch(e){ state={} }
+  state.checks=state.checks||{}; state.bought=state.bought||{}; state.skin=state.skin||{}; state.start=state.start||'2026-11-04'; state.study=state.study||{}; state.water=state.water||{}; state.phil=state.phil||{}; state.reading=state.reading||{}; state.cycle=state.cycle||null; state.food=state.food||{}; state.shift=state.shift||{};
+  // перенос старых отметок (eve -> act)
+  Object.keys(state.checks).forEach(function(k){ var r=state.checks[k]; if(r.eve){ r.act=true; delete r.eve } });
+
+  var LS='glowup-state';
+  var I = {
+    drop:'<path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/>',
+    bolt:'<path d="M13 2L5 14h6l-1 8 8-12h-6z"/>',
+    citrus:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3L6.3 17.7"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+    moon:'<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>',
+    mask:'<path d="M4 9c0-3 4-5 8-5s8 2 8 5v3c0 5-4 8-8 8s-8-3-8-8z"/><circle cx="9" cy="11" r="1.2"/><circle cx="15" cy="11" r="1.2"/>',
+    flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/>',
+    jar:'<rect x="5" y="9" width="14" height="11" rx="3"/><path d="M7 9V6h10v3"/>',
+    museum:'<path d="M4 21h16M5 21V10M19 21V10M9 21v-8M15 21v-8M3 10l9-6 9 6z"/>',
+    read:'<path d="M3 6h6a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H3z"/><path d="M21 6h-6a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h7z"/>',
+    home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+    lotus:'<path d="M12 20c-4 0-8-3-8-7 3 0 6 1.5 8 4 2-2.5 5-4 8-4 0 4-4 7-8 7z"/><path d="M12 17c-2-3-2-7 0-11 2 4 2 8 0 11z"/>',
+    walk:'<circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 3v3M8 12l3-4 3 2 3 1M11 8l-1 5"/>',
+    eye:'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/>',
+    heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    book:'<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/>',
+    dumbbell:'<path d="M6 7v10M18 7v10M3 9v6M21 9v6M6 12h12"/>',
+    swim:'<path d="M3 17c2 0 2-1.5 4.5-1.5S10 17 12 17s2-1.5 4.5-1.5S19 17 21 17M3 12.5c2 0 2-1.5 4.5-1.5S10 12.5 12 12.5s2-1.5 4.5-1.5 2.5 1.5 4.5 1.5"/><circle cx="16" cy="6" r="2"/>'
+  };
+
+  // тренировки: через день, по кругу из 8: зал и дом чередуются, раз в круг йога
+  var WK_START='2026-11-05';
+  var WT={
+    A:{t:'Зал: ягодицы + задняя поверхность',dur:60,icon:'dumbbell',gym:1},
+    B:{t:'Зал: верх + кор',dur:60,icon:'dumbbell',gym:1},
+    C:{t:'Зал: ягодицы + ноги',dur:60,icon:'dumbbell',gym:1},
+    D:{t:'Зал: кардио, дорожка + бассейн',dur:75,icon:'swim',gym:1},
+    H1:{t:'Дома: ягодицы, спина, плечи, кор',dur:40,icon:'home'},
+    H2:{t:'Дома: ноги, плечи, осанка',dur:40,icon:'home'},
+    H3:{t:'Дома: ягодицы, спина, кор',dur:40,icon:'home'},
+    Y:{t:'Йога и растяжка',dur:25,icon:'lotus'},
+    W:{t:'Прогулка 40 минут',dur:40,icon:'walk'}};
+  var ROT=['A','H1','B','H2','C','H3','D','Y'];
+  // цикл: старт месячных и длина (по Flo: прошлый цикл с 11 октября, следующие ждём 9 ноября)
+  function cycleStart(){ return state.cycle&&state.cycle.start||'2026-11-09' }
+  var CYCLE_LEN=29;
+  function cycleDay(key){ var d=Math.round((parse(key)-parse(cycleStart()))/864e5); return ((d%CYCLE_LEN)+CYCLE_LEN)%CYCLE_LEN+1 }
+  function cyclePhase(key){ var c=cycleDay(key); return c<=5?'men':c<=13?'fol':c<=16?'ovu':c<=24?'lut':'pms' }
+  var PHASES={men:['Месячные','бережно: дом, йога, прогулки'],fol:['Фолликулярная','сил прибавляется: можно прибавлять веса'],ovu:['Овуляция','пик сил; разминка обязательна, суставы мягче'],lut:['Лютеиновая','обычная нагрузка'],pms:['Перед месячными','нагрузка как обычно или чуть легче, без рекордов']};
+  // замена тренировки по фазе цикла
+  function effWorkout(key){
+    var t=workoutFor(key); if(t===null) return null;
+    var ph=cyclePhase(key), c=cycleDay(key);
+    if(ph==='men'){
+      if(c<=2) return {type:'Y',note:'1–2 день месячных: вместо '+(WT[t].gym?'зала':'силовой')+' йога и растяжка'};
+      var home={A:'H3',B:'H1',C:'H2',D:'W'}[t]; if(home) return {type:home,note:'месячные: вместо зала дома, вполсилы'};
+      return {type:t,note:'месячные: вполсилы'};
+    }
+    if(ph==='pms'&&t==='D') return {type:'D',note:'перед месячными: кардио спокойно, бассейн в удовольствие'};
+    return {type:t,note:PHASES[ph][1]};
+  }
+  // перенос тренировок: откуда → куда
+  var WK_MOVE={'2026-11-07':'2026-11-06'};
+  function workoutFor(key){
+    for(var f in WK_MOVE){ if(WK_MOVE[f]===key) return baseWorkout(f) }
+    if(WK_MOVE[key]) return null;
+    return baseWorkout(key);
+  }
+  function baseWorkout(key){
+    if(key<WK_START) return null;
+    var diff=Math.round((parse(key)-parse(WK_START))/864e5);
+    return diff%2===0 ? ROT[(diff/2)%ROT.length] : null;
+  }
+  function workoutStep(wd,key){
+    var e=effWorkout(key); if(!e) return null;
+    var w=WT[e.type], weekend=(wd===0||wd===6), o=DAYS[key];
+    var hint=e.note;
+    if(e.type==='D') hint+=weekend?' · дорожка 30–40 мин, бассейн 30 мин':' · в будни хватит дорожки 30–40 мин';
+    else if(w.gym||e.type.charAt(0)==='H') hint+=' · разминка 10 мин, в конце растяжка';
+    if(e.type==='Y') hint+=' · программа в «Гиде»'+(cyclePhase(key)==='men'?', вариант для месячных':'');
+    var time;
+    if(w.gym){ time=(o&&o.wkTime)?o.wkTime:(weekend?'13:00':'обед'); if(o&&o.wkHint) hint+=' · '+o.wkHint; else if(!weekend) hint+=' · вход в зал до 17:00' }
+    else time=(o&&o.wkTime&&!o.travelMorning)?o.wkTime:(weekend?'13:00':'вечер');
+    return {id:'wk',time:time,dur:(w.gym&&!weekend&&e.type==='D')?45:w.dur,t:w.t,hint:hint,icon:w.icon,c:w.gym?'var(--teal)':'var(--green)',tall:w.dur>=40};
+  }
+
+  // курс «Введение в историю искусства» (ВШЭ): тема → срок (воскресенье)
+  var TOPICS=[
+    ['Античность, ч. 1','2026-11-08'],['Античность, ч. 2','2026-11-15'],['Раннее Средневековье','2026-11-22'],
+    ['Высокое Средневековье','2026-11-29'],['XIV век','2026-12-06'],['XV век','2026-12-13'],['XVI век','2026-12-20'],
+    ['XVII век','2026-12-27'],['XVIII век','2027-01-10'],['XIX век','2027-01-17'],['XX век','2027-01-24']];
+  var BREAK=['2026-12-28','2027-01-03'], STUDY_FROM='2026-11-04', STUDY_TO='2027-01-24';
+  // индекс темы недели для даты: -1 = каникулы, null = вне курса
+  function topicFor(key){
+    if(key<STUDY_FROM||key>STUDY_TO) return null;
+    if(key>=BREAK[0]&&key<=BREAK[1]) return -1;
+    for(var i=0;i<TOPICS.length;i++){ if(key<=TOPICS[i][1]) return i }
+    return null;
+  }
+  // курс «Философия: расширенный курс» (ВШЭ): тема → срок (воскресенье)
+  var PHIL=[
+    ['Что такое философия','2026-11-15'],['Досократики','2026-11-22'],['Сократ, Платон, Аристотель','2026-11-29'],
+    ['Эллинизм','2026-12-06'],['Средние века','2026-12-13'],['Возрождение','2026-12-20'],['Новое время','2026-12-27'],
+    ['Немецкая классическая философия','2027-01-10'],['XIX век: основные течения','2027-01-17'],['XX век: основные течения','2027-01-24'],
+    ['Этика. Философия сознания','2027-01-31'],['Политическая философия. Философия ИИ','2027-02-07'],
+    ['Философия языка. Философия истории','2027-02-14'],['Философия науки. Континентальная философия','2027-02-21'],
+    ['Философия искусства. Философия религии','2027-02-28']];
+  var PH_FROM='2026-11-09', PH_TO='2027-02-28';
+  function philFor(key){
+    if(key<PH_FROM||key>PH_TO) return null;
+    if(key>=BREAK[0]&&key<=BREAK[1]) return -1;
+    for(var i=0;i<PHIL.length;i++){ if(key<=PHIL[i][1]) return i }
+    return null;
+  }
+  // рабочие дни: пн–пт (график плавающий, поэтому в будни шаги привязаны к якорям: метро, обед, дом)
+  var WORKDAYS=[1,2,3,4,5];
+  function isWork(wd){ return WORKDAYS.indexOf(wd)>=0 }
+  function philStep(wd,key){
+    var ti=philFor(key); if(ti===null||ti===-1) return null;
+    var name='Тема '+(ti+1)+': '+PHIL[ti][0];
+    if(wd===0) return {id:'ph',time:'11:00',dur:45,t:'Философия: конспект и тест',hint:name,icon:'book',c:'var(--amber)',tall:true};
+    if(isWork(wd)&&wd!==5) return {id:'ph',time:'метро',dur:50,t:'Философия: лекция',hint:name+' · смотреть или слушать по дороге домой',icon:'book',c:'var(--amber)',tall:true};
+    return null;
+  }
+  // книга, которую нужно дочитать перед курсами
+  var CURRENT_BOOK={t:'Феликс Юсупов, мемуары',hint:'дочитать, потом начнутся Гомбрих и Рассел · «Дочитала» в Трекерах'};
+  function bookFirst(st){ if(state.reading.yusupovDone) return st; return Object.assign({},st,{t:CURRENT_BOOK.t,hint:CURRENT_BOOK.hint,c:'var(--olive)'}) }
+  function readStep(wd,key){ var r=readStepBase(wd,key); return r?bookFirst(r):r }
+  function readStepBase(wd,key){
+    if(!isWork(wd)) return null;
+    if(wd===1||wd===3||wd===5){
+      var ai=topicFor(key);
+      return {id:'rd',time:'метро',dur:50,t:'Гомбрих, «История искусства»',hint:(ai!==null&&ai>=0)?'глава к теме «'+TOPICS[ai][0]+'»':'читать по порядку',icon:'read',c:'var(--violet)'};
+    }
+    var pi=philFor(key);
+    return {id:'rd',time:'метро',dur:50,t:'Рассел, «История западной философии»',hint:(pi!==null&&pi>=0)?'глава к теме «'+PHIL[pi][0]+'»':'начать с греков, читать по порядку',icon:'read',c:'var(--amber)'};
+  }
+  function studyStep(wd,key){
+    if(wd!==6) return null;
+    var ti=topicFor(key); if(ti===null||ti===-1) return null;
+    return {id:'st',time:'11:00',dur:90,t:'История искусства',hint:'Тема '+(ti+1)+': '+TOPICS[ti][0]+' · лекции и тест',icon:'museum',c:'var(--violet)',tall:true};
+  }
+  function svg(n){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+I[n]+'</svg>' }
+
+  // день недели: 0=вс … 6=сб
+  var MC=[1,2,3,4,5], LED=[1,3,5,6];
+  // уход по средствам, которые уже есть; новые активы вводятся по неделям
+  var PH1='2026-11-12', PH2='2026-11-26';
+  function phaseOf(key){ key=key||iso(today); return key<PH1?0:(key<PH2?1:2) }
+  // приборы, которые уже есть: Coolboxbeauty (микротоки) и LED-маска с маркетплейса
+  var OWNED={bear:1,led:1};
+  function has(id){ return !!(OWNED[id]||state.bought[id]) }
+  // вечерний актив: ret — Celimax, mask — VT Cica Reti-A, reedle — VT Collagen, bak — крем с бакучиолом
+  function eveAct(wd,ph){
+    if(ph===0) return null;
+    if(wd===1||wd===3) return 'ret';
+    if(wd===2||wd===6) return 'bak';
+    if(ph>=2&&wd===5) return 'mask';
+    if(ph>=2&&wd===4) return 'reedle';
+    return null;
+  }
+  function amVita(wd,ph){ return ph>=2&&(wd===2||wd===6) }
+  var ACTN={ret:['Ретинол','горошина на всё лицо, вокруг глаз не наносить'],hyd:['Увлажняющая сыворотка','день без активов'],acid:['Кислоты','тонер AHA/BHA/PHA, ретинол сегодня не нужен']};
+  // особые дни (график на конкретные даты)
+  var DAYS={
+    '2026-11-05':{label:'выходной',wkTime:'13:00',art:true},
+    '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'15:30',wkHint:'перенесено с субботы · вход в зал до 17:00',free:'отдых и собрать вещи к поезду'},
+    '2026-11-07':{label:'работа 7–15 · поезд 16:49',commute:true,train:true,travelEve:true},
+    '2026-11-08':{label:'родной город',away:true},
+    '2026-11-09':{label:'дорога домой · выходной',travelMorning:true,trainPhil:true,wkTime:'до 17:00',wkHint:'если успеете в зал после поезда; не успели — пропуск без вины'},
+    '2026-11-10':{label:'день рождения',bday:true}
+  };
+  function customDay(wd,key,o){
+    var s=stepsBase(wd,key), at=s.findIndex(function(x){return x.part==='Вечер'});
+    var morning=s.slice(0,at), evening=s.slice(at), mid=[];
+    var MIN_M=['m_clean','spf'], MIN_E=['e_clean','e_cream'];
+    if(o.away||o.travelMorning){ morning=[{part:'Утро · в поездке'}].concat(morning.filter(function(x){return MIN_M.indexOf(x.id)>=0})) }
+    if(o.away||o.travelEve){ evening=[{part:'Вечер · в поездке'}].concat(evening.filter(function(x){return MIN_E.indexOf(x.id)>=0}).map(function(x){ var y=Object.assign({},x); if(y.id==='e_clean'){ y.time='перед сном'; y.t='Очищение'; y.hint='мицеллярная вода или гель, без масла' } return y })) }
+    if(o.commute){ var ai=topicFor(key); mid.push({part:'Дорога на работу'},bookFirst({id:'rd',time:'метро',dur:50,t:'Гомбрих, «История искусства»',hint:(ai!==null&&ai>=0)?'глава к теме «'+TOPICS[ai][0]+'»':'читать по порядку',icon:'read',c:'var(--violet)'})) }
+    if(o.art){ var ti=topicFor(key); if(ti!==null&&ti>=0) mid.push({part:'Учёба'},{id:'st',time:'11:00',dur:90,t:'История искусства',hint:'Тема '+(ti+1)+': '+TOPICS[ti][0]+' · лекции и тест · перенесено с субботы',icon:'museum',c:'var(--violet)',tall:true}) }
+    if(o.trainPhil){ var pi=philFor(key); mid.push({part:'В поезде'},{id:'ph',time:'поезд',dur:50,t:'Философия: первая лекция',hint:(pi!==null&&pi>=0)?'Тема '+(pi+1)+': '+PHIL[pi][0]+' · можно слушать в наушниках':'',icon:'book',c:'var(--amber)',tall:true}) }
+    var wk=workoutStep(wd,key); if(wk) mid.push({part:'Тренировка'},wk);
+    if(o.train) mid.push({part:'Поезд 16:49'},bookFirst({id:'tr',time:'16:49',dur:60,t:'Книга в дорогу',hint:'Рассел, «История западной философии»: начать с древних греков',icon:'read',c:'var(--amber)'}));
+    if(o.free) mid.push({part:'Пятница'},{id:'free',time:'вечер',t:'Свободный вечер',hint:o.free,icon:'heart',c:'var(--pink)'});
+    if(o.away) mid.push({part:'Родной город'},{id:'free',time:'весь день',t:'День с семьёй',hint:'план на паузе: вода и минимум ухода',icon:'heart',c:'var(--pink)'});
+    if(o.bday) mid.push({part:'Праздник'},{id:'bday',time:'весь день',t:'С днём рождения!',hint:'день без плана: вода, SPF и ваши любимые люди',icon:'heart',c:'var(--coral)',tall:true});
+    var out=morning.concat(mid,evening);
+    if(wk&&wk.icon==='swim'){ out.forEach(function(x){ if(x.id==='e_clean') x.hint='после бассейна: смыть хлор, крем погуще' }) }
+    return out;
+  }
+  function stepsFor(wd,key){
+    var s=stepsBase(wd,key); if(!key) return s;
+    if(DAYS[key]) return customDay(wd,key,DAYS[key]);
+    var at=s.findIndex(function(x){return x.part==='Вечер'});
+    var morning=s.slice(0,at), evening=s.slice(at), mid=[];
+    var wk=workoutStep(wd,key), ph=philStep(wd,key), st=studyStep(wd,key), rd=readStep(wd,key);
+    if(isWork(wd)){
+      if(rd) mid.push({part:'Дорога на работу'},rd);
+      var gymWk=wk&&wk.time==='обед';
+      if(gymWk) mid.push({part:'Днём'},wk);
+      if(ph) mid.push({part:'Дорога домой'},ph);
+      if(wk&&!gymWk) mid.push({part:'Тренировка дома'},wk);
+      if(wd===5) mid.push({part:'Пятница'},{id:'free',time:'вечер',t:'Свободный вечер',hint:'по плану: сериал, друзья или ничего, без чувства вины',icon:'heart',c:'var(--pink)'});
+    } else {
+      if(st) mid.push({part:'Учёба'},st);
+      if(ph) mid.push({part:'Учёба'},ph);
+      if(wk) mid.push({part:'Тренировка'},wk);
+    }
+    var out=morning.concat(mid,evening);
+    if(wk&&wk.icon==='swim'){ out.forEach(function(x){ if(x.id==='e_clean') x.hint='после бассейна: смыть хлор, крем погуще' }) }
+    return out;
+  }
+  function stepsBase(wd,key){
+    var ph=phaseOf(key), a=eveAct(wd,ph);
+    var s=[{part:'Утро'},
+      {id:'m_clean',time:'утро',dur:2,t:'Умывание',hint:'мягкий гель, тёплая вода',icon:'drop',c:'var(--blue)'}];
+    if(has('bear')&&MC.indexOf(wd)>=0) s.push({id:'mc',time:'',dur:5,t:'Микротоки Coolboxbeauty',hint:'3–5 мин на алоэ-геле, снизу вверх и от центра к ушам; потом гель смыть',icon:'bolt',c:'var(--navy)',tall:true});
+    s.push({id:'ess',time:'',dur:1,t:'Эссенция NUNKORO',hint:'немного в ладони и вбить в лицо',icon:'drop',c:'var(--plum)'});
+    if(amVita(wd,ph)) s.push({id:'vitc',time:'',dur:2,t:'VT Vita-Light Reedle Shot',hint:'витамин C с микроиглами: тонкий слой, лёгкое покалывание — это нормально',icon:'citrus',c:'var(--yellow)'});
+    else s.push({id:'vitc',time:'',dur:1,t:'Anua ниацинамид 10% + TXA',hint:'2–3 капли: тон, поры, следы постакне',icon:'citrus',c:'var(--yellow)'});
+    s.push({id:'birch',time:'',dur:1,t:'Round Lab Birch Juice',hint:'увлажнение',icon:'drop',c:'var(--aqua)'});
+    s.push({id:'patch',time:'',dur:15,t:"Патчи D'Alba",hint:'15–20 мин, пока завтракаете или собираетесь: против отёков',icon:'eye',c:'var(--lilac)'});
+    s.push({id:'spf',time:'',dur:3,t:'SPF',hint:has('spf')?'последним шагом каждый день, зимой тоже. Если кожа сухая — до него тонкий слой Atoderm':'купить SPF первым делом! До этого ретинол и ниацинамид не начинать',icon:'sun',c:'var(--coral)'});
+    s.push({part:'Вечер'});
+    s.push({id:'e_clean',time:'дома',dur:5,t:'Очищение',hint:'смыть SPF и макияж, потом мягкий гель',icon:'moon',c:'var(--plum)'});
+    if(has('led')&&LED.indexOf(wd)>=0) s.push({id:'led',time:'',dur:15,t:'LED-маска',hint:'только красный режим, 10–15 мин, глаза закрыть',icon:'mask',c:'var(--coral)',tall:true});
+    s.push({id:'e_ess',time:'',dur:1,t:'Эссенция NUNKORO',icon:'drop',c:'var(--plum)'});
+    if(a==='ret') s.push({id:'act',time:'',dur:2,t:'Celimax Retinol Shot',hint:'ретинол 0,1%: горошина на сухую кожу, вокруг глаз и у крыльев носа не наносить',icon:'flask',c:'var(--brown)'});
+    if(a==='mask') s.push({id:'act',time:'',dur:20,t:'Маска VT Cica Reti-A',hint:'это ретиноид: 15–20 мин, остатки вбить. Celimax сегодня не нужен',icon:'mask',c:'var(--brown)',tall:true});
+    if(a==='reedle') s.push({id:'act',time:'',dur:2,t:'VT Collagen Reedle Shot',hint:'микроиглы: тонкий слой. Сильно щиплет или краснеет — смыть',icon:'flask',c:'var(--brown)'});
+    if(a!=='ret') s.push({id:'e_birch',time:'',dur:1,t:'Round Lab Birch Juice',icon:'drop',c:'var(--aqua)'});
+    if(a==='bak') s.push({id:'e_cream',time:'',dur:2,t:'By Wishtrend бакучиол',hint:'ночной крем: мягкая альтернатива ретинолу',icon:'jar',c:'var(--green)'});
+    else s.push({id:'e_cream',time:'',dur:2,t:'Bioderma Atoderm',hint:a==='ret'?'через 10–15 мин после ретинола':'бальзам для барьера: против сухости и шелушения',icon:'jar',c:'var(--green)'});
+    return s;
+  }
+
+  var MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  var MSH=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  var WDN=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+  var WDFULL=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  function iso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0') }
+  function parse(s){ var p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]) }
+  function monday(d){ var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()); x.setDate(x.getDate()-((x.getDay()+6)%7)); return x }
+  function add(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x }
+  var today=new Date(); today=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  var sel=today, weekStart=monday(today);
+  function $(id){ return document.getElementById(id) }
+  function rec(key){ return state.checks[key]||{} }
+
+  function renderWeek(){
+    var w=$('week'); w.innerHTML='';
+    for(var i=0;i<7;i++){
+      var d=add(weekStart,i), key=iso(d), r=rec(key);
+      var st=stepsFor(d.getDay(),key).filter(function(x){return x.id});
+      var b=document.createElement('button'); b.className='wd'; b.type='button'; b.dataset.date=key;
+      b.setAttribute('aria-pressed',String(key===iso(sel)));
+      if(key===iso(today)) b.setAttribute('aria-current','date');
+      var dots=['mc','led','spf','act','rd','tr','st','ph','wk'].filter(function(k){return st.some(function(x){return x.id===k})}).map(function(k){
+        var c={mc:'var(--navy)',led:'var(--coral)',spf:'var(--yellow)',act:'var(--brown)',st:'var(--violet)',ph:'var(--amber)',rd:'var(--olive)',tr:'var(--olive)',wk:'var(--teal)'}[k];
+        return '<i class="'+(r[k]?'on':'')+'" style="--c:'+c+'"></i>' }).join('');
+      b.innerHTML='<span class="n">'+WDN[d.getDay()]+'</span><span class="d">'+d.getDate()+'</span><span class="dots">'+dots+'</span>';
+      w.appendChild(b);
+    }
+    $('dateTitle').innerHTML=sel.getDate()+'. '+MONTHS[sel.getMonth()]+' <span class="acc">'+sel.getFullYear()+'</span>';
+    var dn=Math.round((sel-parse(state.start))/864e5)+1;
+    $('dateSub').textContent=WDFULL[sel.getDay()]+(DAYS[iso(sel)]?' · '+DAYS[iso(sel)].label:'')+' · уход: '+['неделя 1, база','вводим ретинол','полная схема'][phaseOf(iso(sel))];
+  }
+
+  function renderTimeline(){
+    var key=iso(sel), r=rec(key), box=$('timeline'), html='', tot=0, done=0;
+    stepsFor(sel.getDay(),key).forEach(function(s){
+      if(s.part){ html+='<div class="part">'+s.part+'</div>'; return }
+      tot++; var on=!!r[s.id]; if(on) done++;
+      html+='<div class="step'+(on?' done':'')+'" style="--c:'+s.c+'">'+
+        '<div class="time">'+s.time+'</div>'+
+        '<div class="rail"><div class="ic'+(s.tall?' tall':'')+'">'+svg(s.icon)+'</div></div>'+
+        '<div class="info"><div class="meta">'+[s.time,s.dur?s.dur+' мин':''].filter(Boolean).join(' · ')+'</div><div class="t">'+s.t+'</div>'+(s.hint?'<div class="hint">'+s.hint+'</div>':'')+'</div>'+
+        '<button class="ck" type="button" aria-pressed="'+on+'" data-step="'+s.id+'" aria-label="Готово: '+s.t+'"></button></div>';
+    });
+    html+='<div class="daydone">'+(done===tot?'Всё сделано. Отличный день.':'Сделано '+done+' из '+tot)+'</div>';
+    box.innerHTML=html;
+  }
+
+  function plannedIn(k,wd,key){ var ids=stepsFor(wd,key).map(function(x){return x.id}); return ids.indexOf(k)>=0 }
+  function renderTrackers(){
+    var end=add(weekStart,6);
+    $('trWeek').textContent='Неделя '+weekStart.getDate()+' '+MSH[weekStart.getMonth()]+' – '+end.getDate()+' '+MSH[end.getMonth()];
+    var defs=[['mc','Микро-\nтоки','var(--navy)'],['led','LED-\nмаска','var(--coral)'],['spf','SPF','var(--yellow)'],['act','Рети-\nноиды','var(--brown)']];
+    var html='';
+    defs.forEach(function(df){
+      var plan=0,done=0;
+      for(var i=0;i<7;i++){ var d=add(weekStart,i); if(plannedIn(df[0],d.getDay(),iso(d))){ plan++; if(rec(iso(d))[df[0]]) done++ } }
+      if(df[0]==='act'){ plan=0; done=0; for(var j=0;j<7;j++){ var dd=add(weekStart,j), a=eveAct(dd.getDay(),phaseOf(iso(dd))); if(a==='ret'||a==='mask'){ plan++; if(rec(iso(dd)).act) done++ } } }
+      var pct=plan?Math.round(done/plan*100):0;
+      html+='<div class="bar" style="--c:'+df[2]+'"><div class="tube"><div class="f" style="height:'+Math.max(pct,0)+'%"></div><div class="p'+(pct<18?' dark':'')+'">'+pct+'%</div></div><div class="l">'+df[1].replace('\n','<br>')+'</div><div class="x">'+(plan?done+' из '+plan:(df[0]==='mc'||df[0]==='led'?'нет прибора':'не по плану'))+'</div></div>';
+    });
+    $('bars').innerHTML=html;
+    // серия SPF
+    var n=0, d=new Date(today); if(!rec(iso(d)).spf) d=add(d,-1);
+    while(rec(iso(d)).spf){ n++; d=add(d,-1) }
+    $('streak').textContent=n;
+    $('streakSub').textContent=(n%10===1&&n%100!==11?'день':(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?'дня':'дней'))+' подряд с SPF';
+    renderSkin();
+    // путь
+    var dn=Math.max(0,Math.round((today-parse(state.start))/864e5)+1);
+    $('jSub').textContent='День '+dn+' из 90';
+    $('jFill').style.width=Math.min(100,dn/90*100)+'%';
+    var ms=[[14,'2 недели','отёки и цвет лица','var(--yellow)'],[60,'2 месяца','текстура и поры','var(--lilac)'],[90,'3–6 месяцев','морщины и плотность','var(--green)']];
+    $('miles').innerHTML=ms.map(function(m){ return '<div class="mile'+(dn>=m[0]?' on':'')+'" style="--c:'+m[3]+'"><b>'+m[1]+'</b>'+m[2]+'</div>' }).join('');
+  }
+
+  function waterGoal(key){ var e=effWorkout(key); return (e&&e.type!=='Y'&&e.type!=='W')?10:8 }
+  function fmtL(ml){ return String(Math.round(ml/10)/100).replace('.',',') }
+  function renderWater(){
+    var key=iso(sel), n=state.water[key]||0, goal=waterGoal(key), cells=Math.max(goal,Math.min(n+1,12)), h='';
+    for(var i=0;i<cells;i++){ h+='<button type="button" class="gl'+(i>=goal?' extra':'')+'" aria-pressed="'+(i<n)+'" data-gl="'+(i+1)+'" aria-label="'+(i+1)+' стакан"></button>' }
+    $('glasses').innerHTML=h;
+    $('wNow').textContent=fmtL(n*250);
+    $('wGoal').textContent=fmtL(goal*250);
+    $('wNote').textContent=n>=goal?'Норма на сегодня выполнена':(goal===10?'день тренировки: +0,5 л':'стакан = 250 мл');
+    var ws=monday(sel), wh='';
+    for(var j=0;j<7;j++){ var d=add(ws,j), k=iso(d), c=state.water[k]||0, g=waterGoal(k), pct=Math.min(100,Math.round(c/g*100));
+      wh+='<div class="wcol"><div class="tb"><i style="height:'+pct+'%"></i></div><span>'+(c?fmtL(c*250):'—')+'</span><span>'+WDN[d.getDay()]+'</span></div>' }
+    $('wweek').innerHTML=wh;
+  }
+  function renderReading(){
+    var done=!!state.reading.yusupovDone;
+    $('nrSub').textContent=done?'Юсупов дочитан. Теперь в метро: Гомбрих (пн, ср, пт) и Рассел (вт, чт).':'Феликс Юсупов, мемуары. Когда дочитаете, нажмите кнопку, и в плане появятся Гомбрих и Рассел.';
+    $('nrStatus').textContent=done?'дочитано':'в метро';
+    $('nrDone').textContent=done?'Вернуть Юсупова в план':'Дочитала';
+  }
+  function renderFit(){
+    var wPlan=0,wDone=0,total=0,mPlan=0,mDone=0, tk=iso(today);
+    for(var i=0;i<7;i++){ var k=iso(add(monday(today),i)); if(workoutFor(k)!==null){ wPlan++; if(rec(k).wk) wDone++ } }
+    Object.keys(state.checks).forEach(function(k){ if(state.checks[k].wk) total++ });
+    for(var j=0;j<30;j++){ var k2=iso(add(today,-j)); if(workoutFor(k2)!==null){ mPlan++; if(rec(k2).wk) mDone++ } }
+    $('fitWeek').textContent=wDone+'/'+wPlan;
+    $('fitTotal').textContent=total;
+    $('fitMonth').textContent=(mPlan?Math.round(mDone/mPlan*100):0)+'%';
+    var html='', d=new Date(today), n=0;
+    if(rec(tk).wk) d=add(d,1);
+    while(n<5){ var k3=iso(d), e=effWorkout(k3);
+      if(e){ var wd=d.getDay(), w=WT[e.type], when=(k3===tk?'сегодня':WDN[wd]+', '+d.getDate()+' '+MSH[d.getMonth()])+' · '+(workoutStep(wd,k3)||{time:''}).time;
+        var lbl=w.gym?'З':e.type==='Y'?'Й':e.type==='W'?'П':'Д';
+        html+='<div class="up'+(n===0?' first':'')+'"><span class="n" style="background:'+(w.gym?'var(--teal)':'var(--green)')+'">'+lbl+'</span><span class="nm">'+w.t+'</span><span class="when">'+when+'</span></div>'; n++ }
+      d=add(d,1) }
+    var ck=iso(today), cp=cyclePhase(ck), ns=add(parse(cycleStart()),0);
+    while(iso(ns)<=ck) ns=add(ns,CYCLE_LEN);
+    $('cycDay').textContent=cycleDay(ck);
+    $('cycPhase').textContent=PHASES[cp][0]+': '+PHASES[cp][1]+'.';
+    $('cycNext').textContent='Следующие месячные примерно '+ns.getDate()+' '+MSH[ns.getMonth()]+(cycleStart()>ck?' (по прогнозу)':'')+'.';
+    $('fitNext').innerHTML='<p class="sub" style="margin:0 0 4px">Ближайшие · З — зал, Д — дома, Й — йога, П — прогулка</p>'+html;
+  }
+
+  function plural(n,a,b,c){ var m=n%10,h=n%100; return (m===1&&h!==11)?a:(m>=2&&m<=4&&(h<10||h>=20))?b:c }
+  function renderArt(){
+    var tk=iso(today), done=0, due=0, html='';
+    TOPICS.forEach(function(t,i){ if(state.study['t'+i]) done++; if(t[1]<tk) due++ });
+    var cur=topicFor(tk);
+    TOPICS.forEach(function(t,i){
+      var on=!!state.study['t'+i], dl=parse(t[1]);
+      if(i===8) html+='<div class="brk">28 дек – 3 янв · каникулы, можно догнать</div>';
+      html+='<div class="topic'+(on?' done':'')+(i===cur&&!on?' now':'')+'"><span class="no">'+(i+1)+'</span><span class="nm">'+t[0]+'</span>'+
+        '<span class="dl">до '+dl.getDate()+' '+MSH[dl.getMonth()]+'</span>'+
+        '<button class="ck" type="button" aria-pressed="'+on+'" data-topic="'+i+'" aria-label="Тема пройдена: '+t[0]+'"></button></div>';
+    });
+    $('topics').innerHTML=html;
+    $('artFill').style.width=Math.round(done/TOPICS.length*100)+'%';
+    $('artDone').textContent=done+' из '+TOPICS.length+' '+plural(TOPICS.length,'темы','тем','тем')+' · '+Math.round(done/TOPICS.length*100)+'%';
+    var late=due-done, st=$('artStatus');
+    if(done===TOPICS.length){ st.textContent='курс пройден'; st.className='status' }
+    else if(late>0){ st.textContent='отстаёте на '+late+' '+plural(late,'тему','темы','тем'); st.className='status late' }
+    else { st.textContent='по плану'; st.className='status' }
+    var now=$('artNow');
+    if(cur===-1) now.textContent='Сейчас каникулы: новой темы нет.';
+    else if(cur!==null) now.textContent='На этой неделе: тема '+(cur+1)+', '+TOPICS[cur][0]+'. Занятие в субботу 11:00–12:30, а в метро по пн, ср, пт — Гомбрих.';
+    else now.textContent='';
+  }
+
+  function renderPhil(){
+    var tk=iso(today), done=0, due=0, html='';
+    PHIL.forEach(function(t,i){ if(state.phil['p'+i]) done++; if(t[1]<tk) due++ });
+    var cur=philFor(tk);
+    PHIL.forEach(function(t,i){
+      var on=!!state.phil['p'+i], dl=parse(t[1]);
+      if(i===7) html+='<div class="brk">28 дек – 3 янв · каникулы, можно догнать</div>';
+      html+='<div class="topic'+(on?' done':'')+(i===cur&&!on?' now':'')+'"><span class="no">'+(i+1)+'</span><span class="nm">'+t[0]+'</span>'+
+        '<span class="dl">до '+dl.getDate()+' '+MSH[dl.getMonth()]+'</span>'+
+        '<button class="ck" type="button" aria-pressed="'+on+'" data-ptopic="'+i+'" aria-label="Тема пройдена: '+t[0]+'"></button></div>';
+    });
+    $('phTopics').innerHTML=html;
+    $('phFill').style.width=Math.round(done/PHIL.length*100)+'%';
+    $('phDone').textContent=done+' из '+PHIL.length+' тем · '+Math.round(done/PHIL.length*100)+'%';
+    var late=due-done, st=$('phStatus');
+    if(done===PHIL.length){ st.textContent='курс пройден'; st.className='status' }
+    else if(late>0){ st.textContent='отстаёте на '+late+' '+plural(late,'тему','темы','тем'); st.className='status late' }
+    else { st.textContent=tk<PH_FROM?'старт 9 ноября':'по плану'; st.className='status' }
+    var now=$('phNow');
+    if(tk<PH_FROM) now.textContent='Первая тема с понедельника 9 ноября. Лекции в метро по дороге домой пн–чт, в воскресенье 11:00 конспект и тест.';
+    else if(cur===-1) now.textContent='Сейчас каникулы: новой темы нет.';
+    else if(cur!==null) now.textContent='На этой неделе: тема '+(cur+1)+', '+PHIL[cur][0]+'. Лекции в метро по дороге домой пн–чт, в воскресенье 11:00 конспект и тест.';
+    else now.textContent='';
+  }
+
+  var SK=[['glow','Сияет','var(--green)'],['ok','Норм','var(--blue)'],['puffy','Отёки','var(--lilac)'],['dry','Сухость','var(--yellow)'],['red','Покраснение','var(--coral)'],['acne','Высыпания','var(--plum)']];
+  function skinColor(r){ if(!r||!r.tags||!r.tags.length) return null; for(var i=0;i<SK.length;i++){ if(r.tags.indexOf(SK[i][0])>=0 && SK[i][0]!=='glow' && SK[i][0]!=='ok') return SK[i][2] } return r.tags.indexOf('glow')>=0?'var(--green)':'var(--blue)' }
+  function renderSkin(){
+    var key=iso(sel), r=state.skin[key]||{};
+    $('skinDay').textContent='Как кожа '+(key===iso(today)?'сегодня':sel.getDate()+' '+MSH[sel.getMonth()])+'? Можно выбрать несколько.';
+    $('skinChips').innerHTML=SK.map(function(s){ var on=(r.tags||[]).indexOf(s[0])>=0; return '<button class="chip" type="button" style="--c:'+s[2]+'" aria-pressed="'+on+'" data-skin="'+s[0]+'">'+s[1]+'</button>' }).join('');
+    $('sleepVal').textContent=r.sleep?r.sleep+' ч':'—';
+    var h='';
+    for(var i=13;i>=0;i--){ var d=add(sel,-i), c=skinColor(state.skin[iso(d)]); h+='<div><i style="'+(c?'background:'+c:'')+'"></i><span>'+d.getDate()+'</span></div>' }
+    $('hist').innerHTML=h;
+    $('legend').innerHTML=SK.map(function(s){ return '<span style="--c:'+s[2]+'"><i></i>'+s[1]+'</span>' }).join('');
+  }
+
+  var SHOP=[
+    {g:'Уже есть',c:'#E8F0E2',items:[
+      {owned:1,name:"Патчи D'Alba White Truffle",why:'Утром против отёков.'},
+      {owned:1,name:'Эссенция NUNKORO Nutriboost',why:'Первый шаг после умывания, утром и вечером.'},
+      {owned:1,name:'Anua ниацинамид 10% + TXA 4%',why:'Утром: тон, поры, следы постакне.'},
+      {owned:1,name:'Round Lab Birch Juice',why:'Увлажняющая сыворотка.'},
+      {owned:1,name:'Bioderma Atoderm Intensive',why:'Основной крем вечером, барьер и сухость. Заменяет крем с церамидами.'},
+      {owned:1,name:'Celimax Retinol Shot 0,1%',why:'Ретинол для старта. Заменяет сыворотку с ретинолом из списка.'},
+      {owned:1,name:'By Wishtrend бакучиол',why:'Ночной крем по вт и сб.'},
+      {owned:1,name:'VT Cica Reti-A, маски',why:'Ретиноид, по пятницам с 26 ноября.'},
+      {owned:1,name:'VT Collagen Reedle Shot',why:'Микроиглы, по четвергам с 26 ноября.'},
+      {owned:1,name:'VT Vita-Light Reedle Shot',why:'Витамин C с микроиглами, утром вт и сб с 26 ноября.'},
+      {owned:1,name:'Микротоки Coolboxbeauty',why:'Утром в будни, только с гелем. Работает ли сам ток, проверить нельзя, но как массаж от отёков он полезен в любом случае.'},
+      {owned:1,name:'LED-маска (5 режимов)',why:'Вечером пн, ср, пт, сб, только красный режим. Длины волн продавец не указал, поэтому эффект может быть слабым.'}]},
+    {g:'Приборы',c:'var(--pink)',items:[
+      {id:'led2',name:'LED-маска L&L SKIN Lumi',why:'Апгрейд позже, если понравится LED: проверенные 630 + 850 нм.',price:'≈ 22 232 ₽, с пятничным промокодом ≈ 18 000 ₽'},
+      {id:'bear2',name:'FOREO BEAR mini',why:'Апгрейд позже, если микротоки понравятся: у FOREO заявлена и сертифицирована сила тока.',price:'≈ 11 850 ₽',links:[['BEAR mini','https://goldapple.ru/19000000406-foreo-bear-lavender'],['BEAR 2','https://goldapple.ru/19000204953-bear-2-lavender']]},
+      {id:'gel',pick:1,name:'Проводящий гель',why:'Нужен для микротоков, без него ток не проходит. Хватит обычного алоэ-геля без масел за 200–400 ₽; FOREO Serum дороже.',links:[['FOREO SERUM SERUM SERUM','https://goldapple.ru/15581200003-serum-serum-serum']]}]},
+    {g:'Очищение',c:'#D6E4F2',items:[
+      {id:'oil',name:'Гидрофильное масло Hada Labo',why:'Снимает SPF и макияж вечером, не сушит.',links:[['Hada Labo Gokujyun','https://goldapple.ru/19760321682-gokujyun-oil-cleansing']]},
+      {id:'cln',name:'Гель для умывания CeraVe',why:'Мягкий, с церамидами. Утром и вторым этапом вечером.',links:[['Foaming Cleanser','https://goldapple.ru/11746011-foaming-cleanser'],['Набор CeraVe','https://goldapple.ru/19760319018-duopack-hydrcl-lotion']]}]},
+    {g:'Активы',c:'#FFE6A6',items:[
+      {id:'vitc',name:'Сыворотка с витамином C',why:'Не срочно: пока есть VT Vita-Light. Позже для ежедневного утра: Kiehl’s мягче для старта, 20% вводите через день.',links:[["Kiehl's",'https://goldapple.ru/10693-15370900066-clearly-corrective-dark-spot-solution'],['Revolution 20%','https://goldapple.ru/19000028550-20-vitamin-c-radiance-strength'],['ORJENA','https://goldapple.ru/19760343861-vitamin-c-bright-serum']],pick:1},
+      {id:'ret',covered:'Celimax',name:'Ретинол посильнее',why:'Пока не нужен: начинаете с Celimax 0,1%. Через 2–3 месяца можно перейти на 0,3–0,7%.',links:[['Verifique 0,4%','https://goldapple.ru/19000095708-s-retinolom-0-4-retinol'],['Revolution 0,3%','https://goldapple.ru/19000028546-retinol-vitamins-hyaluronic-0-3'],['DTMS 0,7% позже','https://goldapple.ru/19000164831-retinol']],pick:1},
+      {id:'acid',name:'Мягкие кислоты',why:'Не нужны: обновление кожи дают микроиглы VT и ретиноиды.',links:[['Some By Mi','https://goldapple.ru/19760303642-aha-bha-pha-30-days-miracle-toner']]}]},
+    {g:'Увлажнение и защита',c:'#DCEFD0',items:[
+      {id:'cream',covered:'Atoderm',name:'Крем с церамидами',why:'Пока не нужен: его заменяет Bioderma Atoderm.',links:[['CeraVe лосьон','https://goldapple.ru/89810200003-moisturising'],['Линия CeraVe','https://goldapple.ru/brands/cerave/uvlazhnenie-dlja-lica-i-tela']],pick:1},
+      {id:'spf',first:1,name:'SPF 50 для лица',why:'Купить первым: без SPF ретинол, ниацинамид и микроиглы не начинать. Варианты под тональный — Neogen или Dr.G.',links:[['Clinique','https://goldapple.ru/15201100027-face-cream-spf-50'],['Etude Sun Prise','https://goldapple.ru/99790300048-sun-prise'],['DECODE','https://goldapple.ru/19000015280-antioxidant-sunscreen-cream-smart-sunscreen']],pick:1}]},
+    {g:'Книги к курсам',c:'#F7E9D5',items:[
+      {id:'gombrich',name:'Эрнст Гомбрих, «История искусства»',why:'Спутник к курсу истории искусства. Лучшая книга для неспециалиста: от наскальной живописи до XX века, читается как роман. Удобно читать главу той эпохи, которую проходите на этой неделе.',pick:1},
+      {id:'russell',name:'Бертран Рассел, «История западной философии»',why:'Спутник к курсу философии: классический обзор от досократиков до XX века, ясным языком и с иронией. Читайте главы параллельно темам курса.',pick:1},
+      {id:'sophie',name:'Юстейн Гордер, «Мир Софии»',why:'По желанию, если хочется полегче: роман-введение в историю философии. Хорош для вечера или отпуска.'}]},
+    {g:'Продукты домой',c:'#E3EBD3',items:[
+      {id:'f_bread',name:'Ржаной или цельнозерновой хлеб, сливочное масло 82%',why:'Каждый день 30 г хлеба + 5 г масла: уже учтено в 1400 ккал.'},
+      {id:'f_teos',name:'Белковый творог и греческий йогурт Teos',why:'Для оладий, салата и вечернего творога с ягодами.'},
+      {id:'f_prot',name:'Шоколадный протеин',why:'Для оладий и каши: шоколадный вкус без лишних калорий.'},
+      {id:'f_eggs',name:'Яйца, овсянка, гречка',why:'База для завтраков и ужинов дома.'},
+      {id:'f_fruit',name:'Груши, бананы, киви, замороженные ягоды',why:'Фрукты в оладьи, кашу и на перекус. Киви — витамин C к железу в месячные.'},
+      {id:'f_turkey',name:'Индейка (грудка или бедро)',why:'Для томлёной индейки и салата с фасолью.'},
+      {id:'f_beans',name:'Фасоль в банке, корейская морковь, дижонская горчица',why:'Для вашего салата с индейкой.'},
+      {id:'f_pb',name:'Арахисовая паста без сахара',why:'10 г в кашу.'},
+      {id:'f_seeds',name:'Тыквенные семечки, тёмный шоколад 85%',why:'Магний и цинк: перекус в лютеиновую фазу и перед месячными.'},
+      {id:'f_spin',name:'Шпинат замороженный',why:'Железо и магний: в омлет и к гречке.'}]},
+    {g:'В аптеке',c:'#E6DEFA',items:[
+      {id:'omega',name:'Омега-3 и витамин D',why:'После анализов на витамин D и ферритин. Дозу подберёт врач.'}]}
+  ];
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;') }
+  function renderShop(){
+    var h='';
+    SHOP.forEach(function(g){
+      h+='<div class="pgroup"><h3>'+g.g+'</h3>';
+      g.items.forEach(function(it){
+        if(it.owned){ h+='<div class="pcard" style="--c:'+g.c+'"><div class="nm">'+esc(it.name)+'</div><span class="tag">есть</span><div class="why">'+esc(it.why)+'</div></div>'; return }
+        var on=!!state.bought[it.id];
+        h+='<div class="pcard'+(on||it.covered?' done':'')+'" style="--c:'+g.c+'"><div class="nm">'+esc(it.name)+'</div>'+
+          '<button class="ck" type="button" aria-pressed="'+on+'" data-buy="'+it.id+'" aria-label="Куплено: '+esc(it.name)+'"></button>'+
+          (it.first?'<div style="grid-column:1/-1"><span class="tag">купить первым</span></div>':it.covered?'<div style="grid-column:1/-1"><span class="tag">есть замена: '+esc(it.covered)+'</span></div>':it.pick?'<div style="grid-column:1/-1"><span class="tag">обязательно</span></div>':'')+
+          '<div class="why">'+esc(it.why)+'</div>'+(it.price?'<div class="pr">'+esc(it.price)+'</div>':'')+
+          (it.links?'<div class="ln">'+it.links.map(function(l){return '<a href="'+l[1]+'" target="_blank" rel="noopener">'+esc(l[0])+' ↗</a>'}).join('')+'</div>':'')+'</div>';
+      });
+      h+='</div>';
+    });
+    $('shop').innerHTML=h;
+  }
+  function renderPlan(){
+    var order=[1,2,3,4,5,6,0], h='';
+    h+='<tr><td>Утро</td>'+order.map(function(w){return '<td>'+(amVita(w,2)?'VT C':'Anua')+'</td>'}).join('')+'</tr>';
+    var sh={ret:'Celimax',mask:'маска Reti-A',reedle:'VT Collagen',bak:'бакучиол'};
+    [[1,'нед. 2–3'],[2,'с 26 нояб']].forEach(function(r){ h+='<tr><td>Вечер, '+r[1]+'</td>'+order.map(function(w){var a=eveAct(w,r[0]);return '<td>'+(a?sh[a]:'Atoderm')+'</td>'}).join('')+'</tr>' });
+    $('plan').innerHTML=h;
+  }
+
+
+  // ---------- питание · 1400 ккал ----------
+  var DISH={"bread": ["Хлеб с маслом: 30 г ржаного или цельнозернового + 5 г сливочного", 107, 2.5, 4.6, 13.5], "capp": ["Маленький капучино на овсяном", 100, 2, 5, 12], "omelet": ["Омлет на пару: 2 яйца + 1 белок, со шпинатом и томатами", 180, 18, 10, 4], "omelet_s": ["Омлет на пару из 2 яиц с лососем 50 г", 240, 22, 16, 1], "oat": ["Овсяная каша на воде 200 г с ягодами, без сахара", 175, 5, 2.5, 32], "syr": ["Сырники 2 шт., запечь без масла, без сметаны", 280, 20, 10, 28], "yog": ["Греческий йогурт 150 г без гранолы", 110, 15, 3, 6], "egg": ["Яйцо варёное", 70, 6, 5, 0.5], "salmon": ["Лосось на пару 130 г", 250, 26, 16, 0], "muksun": ["Муксун на пару 160 г", 140, 28, 3, 0], "turkey": ["Индейка (грудка) на пару 150 г", 190, 40, 2.5, 0], "chick": ["Куриная грудка на пару 130 г", 215, 40, 5, 0], "beef": ["Говядина или телятина 120 г, без соуса", 200, 28, 9, 0], "tcut": ["Котлетки из индейки на пару, 2 шт.", 200, 28, 8, 4], "seaf": ["Тёплый салат с морепродуктами, заправка отдельно (1 ч. л.)", 230, 25, 9, 10], "greek": ["Салат Греко без заправки", 170, 7, 12, 8], "green": ["Большой зелёный салат с неркой, заправка отдельно (1 ч. л.)", 300, 25, 17, 10], "celery": ["Салат из сельдерея с говядиной и яйцом, без майонеза", 290, 28, 14, 10], "poke": ["Поке с лососем, риса половина, соус отдельно", 390, 25, 13, 42], "bowl": ["Злаки с яйцом и индейкой (Лонживити)", 400, 30, 14, 38], "soba": ["Гречневая лапша с телятиной, без соуса", 430, 30, 11, 52], "soup": ["Суп «Домашняя лапша» 300 мл", 180, 14, 5, 18], "shav": ["Щавелевый суп без сметаны", 120, 6, 5, 12], "buck": ["Гречка 150 г", 165, 6, 1.7, 32], "rice": ["Рис 120 г", 140, 3, 0.3, 31], "batat": ["Батат запечённый 150 г", 135, 2.4, 0.2, 31], "veg": ["Овощи на пару 200 г: брокколи, цветная капуста, кабачок", 60, 4, 0.6, 9], "spin": ["Шпинат на пару 150 г", 35, 4, 0.6, 3], "cuc": ["Огурцы и зелень", 30, 1.5, 0.2, 5], "olad": ["Ваши шоколадные оладьи (протеин, творог Teos, груша)", 399, 42, 6.6, 42.8], "kasha": ["Ваша каша: овсянка 40 г, шоколадный протеин 15 г вместо Planto, банан 60 г, груша 100 г, арахисовая паста 10 г", 368, 20, 8.5, 56], "bsal": ["Ваш салат с индейкой, фасолью и корейской морковью, 350 г", 342, 37.6, 8.5, 26.3], "tom": ["Ваша томлёная индейка 144 г", 259, 31.3, 14.5, 0.4], "tvor": ["Творог Teos 150 г + ягоды 80 г + тыквенные семечки 10 г", 195, 21, 5.5, 12], "omh": ["Омлет из 2 яиц со шпинатом, на сухой сковороде", 165, 14, 10, 3], "hbuck": ["Гречка 100 г", 110, 4, 1.1, 21], "banana": ["Банан", 90, 1, 0.3, 21], "apple": ["Яблоко", 70, 0.4, 0.3, 17], "kiwi": ["2 киви", 90, 1.6, 0.8, 20], "orange": ["Апельсин", 65, 1.3, 0.2, 15], "choc": ["Тёмный шоколад 85%, 10 г", 60, 1, 5, 2], "seeds": ["Тыквенные семечки 15 г", 85, 4.5, 7, 2], "kefir": ["Кефир 1% 200 мл", 80, 6, 2, 8], "pear": ["Груша", 85, 0.6, 0.2, 20]};
+  var MENU={"men": [{"wb": ["omelet", "oat"], "wl": ["beef", "buck", "spin"], "wd": ["salmon", "veg"], "hb": ["olad"], "hd": ["bsal"], "sn": ["kiwi"], "sn2": ["kiwi"]}, {"wb": ["syr"], "wl": ["soba", "cuc"], "wd": ["tcut", "buck"], "hb": ["kasha"], "hd": ["tom", "veg"], "sn": ["orange"], "sn2": []}], "fol": [{"wb": ["omelet", "oat"], "wl": ["chick", "batat", "veg"], "wd": ["green"], "hb": ["olad"], "hd": ["bsal"], "sn": ["kefir"], "sn2": ["kefir"]}, {"wb": ["yog", "oat", "egg"], "wl": ["bowl", "cuc"], "wd": ["muksun", "rice", "spin"], "hb": ["kasha"], "hd": ["tvor", "omh"], "sn": ["apple"], "sn2": ["apple"]}], "ovu": [{"wb": ["omelet_s", "oat"], "wl": ["poke"], "wd": ["turkey", "batat", "veg"], "hb": ["olad"], "hd": ["tom", "veg"], "sn": ["kiwi"], "sn2": []}, {"wb": ["syr"], "wl": ["seaf", "rice"], "wd": ["salmon", "rice", "veg"], "hb": ["kasha"], "hd": ["bsal"], "sn": ["seeds", "pear"], "sn2": []}], "lut": [{"wb": ["omelet", "oat"], "wl": ["turkey", "buck", "veg"], "wd": ["celery", "batat"], "hb": ["olad"], "hd": ["bsal"], "sn": ["banana"], "sn2": []}, {"wb": ["yog", "oat"], "wl": ["bowl", "cuc"], "wd": ["tcut", "buck", "spin"], "hb": ["kasha"], "hd": ["tom", "hbuck"], "sn": ["seeds"], "sn2": []}], "pms": [{"wb": ["omelet", "oat"], "wl": ["salmon", "buck", "spin"], "wd": ["turkey", "batat", "veg"], "hb": ["olad"], "hd": ["tvor", "banana"], "sn": ["choc", "kefir"], "sn2": []}, {"wb": ["syr"], "wl": ["soup", "greek", "egg"], "wd": ["muksun", "rice", "veg"], "hb": ["kasha"], "hd": ["bsal"], "sn": ["banana"], "sn2": ["banana"]}]};
+  var FOOD_START='2026-11-05';
+  var FPH={
+    men:{f:'железо + витамин C, омега-3',p:'говядина и телятина, гречка, фасоль и чечевица, шпинат, лосось, киви, апельсин, болгарский перец, тёмный шоколад 85%',tip:'Капучино и чай пейте через час после мяса или гречки: они мешают усваивать железо. Витамин C (киви, перец, апельсин) рядом с едой, наоборот, помогает.'},
+    fol:{f:'белок, свежие овощи, ферментированное',p:'яйца, курица, муксун, кефир, греческий йогурт, квашеная капуста, брокколи, ягоды, овсянка',tip:'Сил больше: полные порции белка до и после зала. Кефир или йогурт раз в день для кишечника и кожи.'},
+    ovu:{f:'клетчатка, крестоцветные, цинк',p:'брокколи, цветная капуста, морепродукты, лосось, тыквенные семечки, ягоды, киви, рис',tip:'Больше овощей и воды. Морепродукты и тыквенные семечки дают цинк: он нужен коже.'},
+    lut:{f:'магний, витамин B6, медленные углеводы',p:'индейка, гречка, батат, нут и фасоль, банан, шпинат, тыквенные семечки, творог, тёмный шоколад',tip:'Аппетит в эту фазу растёт, это физиология. Голодно — добавьте белок или овощи, а не сладкое. Гарнир (гречка, батат) в обед обязателен.'},
+    pms:{f:'кальций, магний, калий, меньше соли',p:'йогурт и творог, лосось, гречка, шпинат, банан, тыквенные семечки, огурцы, ромашковый или имбирный чай',tip:'Против отёков: меньше солёного (соусы, сыры, роллы, чипсы) и больше воды. Кальций из йогурта и творога — одно из немногих средств при ПМС с хорошими доказательствами.'}
+  };
+  var FSLOTS={
+    m:[['wb','9:00','Завтрак на работе',['bread','capp']],['wl','12:30','Обед на работе'],['sn','15:30','Перекус'],['hd','19:00','Ужин дома']],
+    e:[['hb','10:00','Завтрак дома',['bread']],['wl','16:00','Обед на работе',['capp']],['wd','20:00','Ужин на работе'],['sn2','','Перекус']],
+    off:[['hb','10:00','Завтрак дома',['bread','capp']],['wl','14:00','Обед в кафе'],['wd','19:00','Ужин в кафе'],['sn2','','Перекус']]
+  };
+  var SHN={m:'Смена 7–15',e:'Смена 15–23',off:'Выходной'};
+  function shiftOf(key){
+    if(state.shift[key]) return state.shift[key];
+    var o=DAYS[key], wd=parse(key).getDay();
+    if(o){ if(/7–15/.test(o.label)) return 'm'; if(/15–23/.test(o.label)) return 'e'; return 'off' }
+    return (wd===0||wd===6)?'off':'m';
+  }
+  function foodDay(key){
+    var ph=cyclePhase(key), v=MENU[ph][cycleDay(key)%2], sh=shiftOf(key), meals=[];
+    FSLOTS[sh].forEach(function(s){
+      var ids=(v[s[0]]||[]).slice(); if(!ids.length) return;
+      meals.push({id:s[0],time:s[1],name:s[2],ids:ids,fx:s[3]||[]});
+    });
+    return {ph:ph,sh:sh,meals:meals};
+  }
+  function sumD(ids){ var t=[0,0,0,0]; ids.forEach(function(i){ for(var k=0;k<4;k++) t[k]+=DISH[i][k+1] }); return t }
+  function renderFood(){
+    var key=iso(sel), fd=foodDay(key), r=state.food[key]||{}, h='', all=[];
+    var o=DAYS[key], free=o&&(o.away||o.bday||o.travelMorning||o.travelEve);
+    $('fSub').textContent='Фаза: '+PHASES[fd.ph][0].toLowerCase()+' · акцент: '+FPH[fd.ph].f;
+    $('fShift').innerHTML=['m','e','off'].map(function(s){ return '<button class="chip" type="button" style="--c:var(--olive)" data-shift="'+s+'" aria-pressed="'+(fd.sh===s)+'">'+SHN[s]+'</button>' }).join('');
+    var dn=Math.round((parse(key)-parse(FOOD_START))/864e5);
+    $('fCheck').innerHTML=(dn>0&&dn%14===0)?'<div class="fcheck"><b>Проверка самочувствия · 2 недели на 1400 ккал</b><br>Если есть хоть одно: цикл задерживается, выпадают волосы, постоянно холодно или нет сил, кружится голова, в зале падают веса, всё время тянет на сладкое — поднимите до 1600 ккал (+ гарнир в обед и перекус) и сдайте ферритин. Всё хорошо — продолжаем.</div>':'';
+    if(free) h+='<div class="fnote" style="margin-bottom:6px"><b>'+o.label[0].toUpperCase()+o.label.slice(1)+': без строгого меню</b>Ориентир: белок в каждый приём, хлеб с маслом и капучино как обычно, вода.</div>';
+    fd.meals.forEach(function(m){
+      var ids=m.fx.concat(m.ids), t=sumD(ids), on=!!r[m.id]; all=all.concat(ids);
+      h+='<div class="meal'+(on?' done':'')+'"><div class="mt">'+(m.time||'по желанию')+'</div><div><div class="mn">'+m.name+'<span>'+Math.round(t[0])+' ккал</span></div><ul>'+
+        m.ids.map(function(i){ return '<li>'+DISH[i][0]+'</li>' }).join('')+m.fx.map(function(i){ return '<li class="fx">'+DISH[i][0]+'</li>' }).join('')+
+        '</ul></div><button class="ck" type="button" data-meal="'+m.id+'" aria-pressed="'+on+'" aria-label="Съедено: '+m.name+'"></button></div>';
+    });
+    $('fMeals').innerHTML=h;
+    var T=sumD(all);
+    $('fTot').innerHTML=[['ккал',T[0]],['белки, г',T[1]],['жиры, г',T[2]],['углев., г',T[3]]].map(function(x){ return '<div><b>'+Math.round(x[1])+'</b>'+x[0]+'</div>' }).join('');
+    $('fPhase').innerHTML='<b>Добавляйте в эту фазу</b>'+FPH[fd.ph].p+'.<br><br>'+FPH[fd.ph].tip+'<br><br><span style="color:var(--muted)">В Кофемании: «на пару, без масла, соус и заправку отдельно». Любое блюдо можно заменить похожим: рыба на рыбу, птица на птицу, гарнир на гарнир.</span>';
+  }
+
+  var VIEWS=['today','trackers','shop','guide'];
+  function setView(v){
+    if(VIEWS.indexOf(v)<0) v='today';
+    VIEWS.forEach(function(n){ $('v-'+n).hidden=n!==v; $('t-'+n).setAttribute('aria-selected',String(n===v)) });
+    window.scrollTo(0,0);
+  }
+  function go(v){ try{ location.hash=v }catch(e){} setView(v) }
+  function all(){ renderWeek(); renderTimeline(); renderTrackers(); renderReading(); renderFit(); renderArt(); renderPhil(); renderWater(); renderShop(); renderPlan(); renderFood() }
+
+  function msg(t){ $('save1').textContent=t; $('save2').textContent=t }
+  function persist(){
+    try{ localStorage.setItem(LS,JSON.stringify(state)); msg('') }
+    catch(e){ msg('Не удалось сохранить. Проверьте, что Safari не в режиме «Частный доступ».') }
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('button'); if(!t) return;
+    if(t.dataset.view){ go(t.dataset.view); return }
+    if(t.dataset.go){ var g=t.dataset.go; if(g==='food'){ go('today'); setTimeout(function(){ $('food').scrollIntoView({behavior:'smooth',block:'start'}) },50); return } if(g==='skin'||g==='art'||g==='fit'||g==='phil'){ go('trackers'); setTimeout(function(){ $(g).scrollIntoView({behavior:'smooth',block:'start'}) },50) } else go(g); return }
+    if(t.id==='cycBtn'){ state.cycle={start:iso(today)}; all(); persist(); return }
+    if(t.id==='nrDone'){ state.reading.yusupovDone=!state.reading.yusupovDone; if(!state.reading.yusupovDone) delete state.reading.yusupovDone; all(); persist(); return }
+    if(t.dataset.ptopic){ var pid='p'+t.dataset.ptopic; state.phil[pid]=!state.phil[pid]; if(!state.phil[pid]) delete state.phil[pid]; renderPhil(); persist(); return }
+    if(t.dataset.topic){ var tid='t'+t.dataset.topic; state.study[tid]=!state.study[tid]; if(!state.study[tid]) delete state.study[tid]; renderArt(); persist(); return }
+    if(t.id==='fab'){ go('trackers'); setTimeout(function(){ $('skin').scrollIntoView({behavior:'smooth',block:'start'}) },50); return }
+    if(t.id==='prevW'||t.id==='nextW'){ var n=t.id==='prevW'?-7:7; weekStart=add(weekStart,n); sel=add(sel,n); all(); return }
+    if(t.dataset.date){ sel=parse(t.dataset.date); renderWeek(); renderTimeline(); renderSkin(); renderWater(); renderFood(); return }
+    if(t.dataset.shift){ var fk=iso(sel); state.shift[fk]=t.dataset.shift; renderFood(); persist(); return }
+    if(t.dataset.meal){ var mk=iso(sel), fr=state.food[mk]||(state.food[mk]={}); fr[t.dataset.meal]=!fr[t.dataset.meal]; if(!fr[t.dataset.meal]) delete fr[t.dataset.meal]; if(!Object.keys(fr).length) delete state.food[mk]; renderFood(); persist(); return }
+    if(t.dataset.gl||t.id==='wPlus'||t.id==='wMinus'){ var wk2=iso(sel), cur=state.water[wk2]||0, nv;
+      if(t.dataset.gl){ var g2=+t.dataset.gl; nv=(cur===g2)?g2-1:g2 } else nv=cur+(t.id==='wPlus'?1:-1);
+      nv=Math.max(0,Math.min(20,nv)); if(nv) state.water[wk2]=nv; else delete state.water[wk2]; renderWater(); persist(); return }
+    if(t.dataset.step){ var k=iso(sel), r=state.checks[k]||(state.checks[k]={}); r[t.dataset.step]=!r[t.dataset.step]; if(!r[t.dataset.step]) delete r[t.dataset.step]; if(!Object.keys(r).length) delete state.checks[k]; renderWeek(); renderTimeline(); renderTrackers(); renderFit(); persist(); return }
+    if(t.dataset.skin){ var sk=iso(sel), s=state.skin[sk]||(state.skin[sk]={tags:[]}); s.tags=s.tags||[]; var i=s.tags.indexOf(t.dataset.skin); if(i>=0) s.tags.splice(i,1); else s.tags.push(t.dataset.skin); renderSkin(); persist(); return }
+    if(t.id==='sleepMinus'||t.id==='sleepPlus'){ var sk2=iso(sel), s2=state.skin[sk2]||(state.skin[sk2]={tags:[]}); var v=s2.sleep||7; v+= t.id==='sleepPlus'?0.5:-0.5; s2.sleep=Math.max(3,Math.min(12,v)); renderSkin(); persist(); return }
+    if(t.dataset.buy){ state.bought[t.dataset.buy]=!state.bought[t.dataset.buy]; if(!state.bought[t.dataset.buy]) delete state.bought[t.dataset.buy]; all(); persist(); return }
+  });
+  window.addEventListener('hashchange',function(){ setView(location.hash.slice(1)) });
+
+  setView(location.hash.slice(1)); all();
+
+  try{ var s0=JSON.parse(localStorage.getItem(LS)||'null'); if(s0&&s0.checks){ state=s0; state.bought=state.bought||{}; state.skin=state.skin||{}; state.start=state.start||'2026-11-04'; state.study=state.study||{}; state.water=state.water||{}; state.phil=state.phil||{}; state.reading=state.reading||{}; state.cycle=state.cycle||null; state.food=state.food||{}; state.shift=state.shift||{}; all() } }catch(e){}
+
+  // резервная копия
+  $('exportBtn').addEventListener('click',function(){
+    var blob=new Blob([JSON.stringify(state,null,1)],{type:'application/json'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='glowup-'+iso(today)+'.json';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove() },1000);
+    $('bkMsg').textContent='Копия сохранена в «Файлы».';
+  });
+  $('importFile').addEventListener('change',function(e){
+    var f=e.target.files[0]; if(!f) return;
+    var r=new FileReader(); r.onload=function(){
+      try{ var s=JSON.parse(r.result); if(!s||!s.checks) throw 0; state=s; state.bought=state.bought||{}; state.skin=state.skin||{}; state.start=state.start||'2026-11-04'; state.study=state.study||{}; state.water=state.water||{}; state.phil=state.phil||{}; state.reading=state.reading||{}; state.cycle=state.cycle||null; state.food=state.food||{}; state.shift=state.shift||{}; persist(); all(); $('bkMsg').textContent='Данные восстановлены.' }
+      catch(x){ $('bkMsg').textContent='Это не файл копии Glow Up. Выберите файл glowup-….json.' }
+    }; r.readAsText(f); e.target.value='';
+  });
+
+  if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}) }
+})();
+</script></body></html>
+</body>
+</html>
