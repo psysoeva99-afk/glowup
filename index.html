@@ -181,6 +181,15 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 .amber .topic.now .dl{color:var(--amber)}
 .amber .topic .ck{--c:var(--amber)}
 .amber .btn{background:var(--amber)}
+.ita .status{background:color-mix(in srgb,var(--green) 20%,transparent);color:var(--fg)}
+.ita .ctrack div{background:var(--green)}
+.ita .topic.now{background:color-mix(in srgb,var(--green) 18%,transparent)}
+.ita .topic .ck{--c:var(--green)}
+.ita .topic.now .dl{color:var(--fg)}
+.ita .fitstats{grid-template-columns:1fr 1fr}
+.ita .fs{background:color-mix(in srgb,var(--green) 16%,transparent)}
+.ita .fs b{color:var(--fg)}
+.ita .btn{background:var(--green);color:#1F1D22}
 .btns{display:flex;flex-wrap:wrap;gap:8px}
 .btn.ghost{background:var(--amber-soft);color:var(--amber)}
 .brk{font-size:12px;color:var(--muted);padding:8px 0 8px 38px;border-bottom:1px solid var(--line)}
@@ -246,6 +255,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
       <button class="qb" data-go="art"><span class="c" style="background:var(--violet)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21V10M19 21V10M9 21v-8M15 21v-8M3 10l9-6 9 6z"></path></svg></span><span>История<br>искусства</span></button>
       <button class="qb" data-go="phil"><span class="c" style="background:var(--amber)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"></path><path d="M12 6v14"></path></svg></span><span>Философия</span></button>
       <button class="qb" data-go="food"><span class="c" style="background:var(--olive)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16a8 8 0 0 1-16 0z"></path><path d="M9 7c0-2 2-2 2-4M14 7c0-2 2-2 2-4"></path></svg></span><span>Питание</span></button>
+      <button class="qb" data-go="ita"><span class="c" style="background:var(--green)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path><path d="M8 9h8M8 12h5"></path></svg></span><span>Итальян-<br>ский</span></button>
       <button class="qb" data-go="trackers"><span class="c" style="background:var(--coral)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg></span><span>Итоги<br>недели</span></button>
       <button class="qb" data-go="shop"><span class="c" style="background:var(--yellow)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg></span><span>Список<br>покупок</span></button>
       <button class="qb" data-go="guide"><span class="c" style="background:var(--lilac)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"></path><path d="M9 9h6M9 13h4"></path></svg></span><span>Как<br>делать</span></button>
@@ -322,6 +332,20 @@ th{color:var(--muted);font-weight:600;font-size:12px}
       <div class="topics" id="phTopics"></div>
       <div class="btns"><a class="btn" href="https://openedu.ru/course/hse/PHIL/" target="_blank" rel="noopener">Открыть курс ↗</a><a class="btn ghost" href="https://www.youtube.com/playlist?list=PLm4edsJMubIdEeze31p-JGaP4uBahnoy3" target="_blank" rel="noopener">Лекции на YouTube ↗</a></div>
     </div>
+    <div class="card ita" id="ita">
+      <div class="course-head">
+        <div><h2>Итальянский</h2><p class="sub">Duolingo каждый день + «Полиглот» Дмитрия Петрова · 16 уроков по ср и вс</p></div>
+        <span class="status" id="itStatus">по плану</span>
+      </div>
+      <div class="fitstats">
+        <div class="fs"><b id="duoStreak">0</b><span>дней подряд в Duolingo</span></div>
+        <div class="fs"><b id="itDone">0/16</b><span>уроков «Полиглота»</span></div>
+      </div>
+      <div class="ctrack"><div id="itFill" style="width:0"></div></div>
+      <div class="cnums"><span id="itPct">0%</span><span id="itEnd"></span></div>
+      <div class="topics" id="itTopics"></div>
+      <div class="btns"><a class="btn" href="https://www.youtube.com/results?search_query=%D0%9F%D0%BE%D0%BB%D0%B8%D0%B3%D0%BB%D0%BE%D1%82+%D0%B8%D1%82%D0%B0%D0%BB%D1%8C%D1%8F%D0%BD%D1%81%D0%BA%D0%B8%D0%B9+%D0%B7%D0%B0+16+%D1%87%D0%B0%D1%81%D0%BE%D0%B2" target="_blank" rel="noopener">«Полиглот» ↗</a><a class="btn ghost" href="https://www.duolingo.com/" target="_blank" rel="noopener">Duolingo ↗</a></div>
+    </div>
     <div class="card">
       <div><h2>Процедуры за неделю</h2><p class="sub">Сколько сделано из плана</p></div>
       <div class="bars" id="bars"></div>
@@ -354,6 +378,11 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 
   <section class="view" id="v-guide" hidden="">
     <div><h1>Как делать</h1><p class="sub">Распорядок, график и образ жизни</p></div>
+    <div class="gcard" style="--c:#DCEFD0"><h3>Итальянский</h3><ul>
+      <li><b>Duolingo каждый день, 10 минут.</b> В рабочие дни это последние 10 минут дороги домой, после лекции по философии. Цель — не прерывать серию: даже в тяжёлый день один урок.</li>
+      <li><b>«Полиглот» Дмитрия Петрова: 16 уроков по 45 минут</b>, по средам и воскресеньям с 11 ноября, финиш в начале января. В среду в 20:30 (при смене 15–23 — в 11:00), в воскресенье в 16:00.</li>
+      <li><b>Как смотреть:</b> с тетрадью, ставить на паузу и отвечать вслух раньше учеников. Каждый урок начинать с 5 минут повтора глаголов прошлых уроков.</li>
+      <li><b>Зачем оба:</b> Duolingo даёт слова и привычку, «Полиглот» — грамматический каркас, чтобы строить свои фразы. После 16 уроков — уровень около A1, дальше добавим курс посложнее и разговорную практику.</li></ul></div>
     <div class="gcard" style="--c:#E3EBD3"><h3>Питание · 1400 ккал</h3><ul>
       <li><b>Меню на сегодня — на главной, под планом.</b> Оно меняется по фазе цикла и смене: 7–15 — завтрак и обед на работе, ужин дома; 15–23 — завтрак дома, обед и ужин на работе.</li>
       <li><b>Хлеб с маслом и капучино — каждый день.</b> Они уже учтены: около 210 ккал.</li>
@@ -480,12 +509,12 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   <button class="fab" id="fab" aria-label="Записать состояние кожи">+</button>
 </div></nav>
 
-<script id="state" type="application/json">{"checks":{},"bought":{},"skin":{"2026-11-04":{"tags":[],"sleep":8}},"start":"2026-11-04","study":{},"water":{},"phil":{}}</script>
+<script id="state" type="application/json">{"checks":{},"bought":{},"skin":{"2026-11-04":{"tags":[],"sleep":8}},"start":"2026-11-04","study":{},"water":{},"phil":{},"reading":{},"cycle":null,"food":{},"shift":{"2026-11-05":"off","2026-11-22":"e","2026-11-14":"e"}}</script>
 <script>
 (function(){
   var state;
   try{ state = JSON.parse(document.getElementById('state').textContent) }catch(e){ state={} }
-  state.checks=state.checks||{}; state.bought=state.bought||{}; state.skin=state.skin||{}; state.start=state.start||'2026-11-04'; state.study=state.study||{}; state.water=state.water||{}; state.phil=state.phil||{}; state.reading=state.reading||{}; state.cycle=state.cycle||null; state.food=state.food||{}; state.shift=state.shift||{};
+  state.checks=state.checks||{}; state.bought=state.bought||{}; state.skin=state.skin||{}; state.start=state.start||'2026-11-04'; state.study=state.study||{}; state.water=state.water||{}; state.phil=state.phil||{}; state.reading=state.reading||{}; state.cycle=state.cycle||null; state.food=state.food||{}; state.shift=state.shift||{}; state.ita=state.ita||{};
   // перенос старых отметок (eve -> act)
   Object.keys(state.checks).forEach(function(k){ var r=state.checks[k]; if(r.eve){ r.act=true; delete r.eve } });
 
@@ -508,7 +537,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
     book:'<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/>',
     dumbbell:'<path d="M6 7v10M18 7v10M3 9v6M21 9v6M6 12h12"/>',
-    swim:'<path d="M3 17c2 0 2-1.5 4.5-1.5S10 17 12 17s2-1.5 4.5-1.5S19 17 21 17M3 12.5c2 0 2-1.5 4.5-1.5S10 12.5 12 12.5s2-1.5 4.5-1.5 2.5 1.5 4.5 1.5"/><circle cx="16" cy="6" r="2"/>'
+    chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',swim:'<path d="M3 17c2 0 2-1.5 4.5-1.5S10 17 12 17s2-1.5 4.5-1.5S19 17 21 17M3 12.5c2 0 2-1.5 4.5-1.5S10 12.5 12 12.5s2-1.5 4.5-1.5 2.5 1.5 4.5 1.5"/><circle cx="16" cy="6" r="2"/>'
   };
 
   // тренировки: через день, по кругу из 8: зал и дом чередуются, раз в круг йога
@@ -605,6 +634,19 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(isWork(wd)&&wd!==5) return {id:'ph',time:'метро',dur:50,t:'Философия: лекция',hint:name+' · смотреть или слушать по дороге домой',icon:'book',c:'var(--amber)',tall:true};
     return null;
   }
+  // итальянский: Duolingo каждый день + «Полиглот» (16 уроков) по ср и вс
+  var DUO_FROM='2026-11-05', ITA_FROM='2026-11-11', ITA_N=16;
+  var ITAD=(function(){ var r=[], d=parse(ITA_FROM); while(r.length<ITA_N){ var w=d.getDay(); if(w===3||w===0) r.push(iso(d)); d=add(d,1) } return r })();
+  function duoStep(wd,key){
+    if(!key||key<DUO_FROM) return null;
+    if(isWork(wd)&&!DAYS[key]) return {id:'duo',time:'метро',dur:10,t:'Duolingo: итальянский',hint:'последние 10 минут дороги домой: 1–2 урока, серию не прерывать',icon:'chat',c:'var(--green)'};
+    return {id:'duo',time:'днём',dur:10,t:'Duolingo: итальянский',hint:'1–2 урока, серию не прерывать',icon:'chat',c:'var(--green)'};
+  }
+  function itaStep(wd,key){
+    var i=ITAD.indexOf(key); if(i<0) return null;
+    var t=wd===0?'16:00':(shiftOf(key)==='e'?'11:00':'20:30');
+    return {id:'it',time:t,dur:45,t:'Итальянский: «Полиглот», урок '+(i+1),hint:'смотреть с тетрадью и повторять вслух за учениками; в конце 5 минут повторить глаголы прошлых уроков',icon:'chat',c:'var(--green)',tall:true};
+  }
   // книга, которую нужно дочитать перед курсами
   var CURRENT_BOOK={t:'Феликс Юсупов, мемуары',hint:'дочитать, потом начнутся Гомбрих и Рассел · «Дочитала» в Трекерах'};
   function bookFirst(st){ if(state.reading.yusupovDone) return st; return Object.assign({},st,{t:CURRENT_BOOK.t,hint:CURRENT_BOOK.hint,c:'var(--olive)'}) }
@@ -666,6 +708,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(o.train) mid.push({part:'Поезд 16:49'},bookFirst({id:'tr',time:'16:49',dur:60,t:'Книга в дорогу',hint:'Рассел, «История западной философии»: начать с древних греков',icon:'read',c:'var(--amber)'}));
     if(o.free) mid.push({part:'Пятница'},{id:'free',time:'вечер',t:'Свободный вечер',hint:o.free,icon:'heart',c:'var(--pink)'});
     if(o.away) mid.push({part:'Родной город'},{id:'free',time:'весь день',t:'День с семьёй',hint:'план на паузе: вода и минимум ухода',icon:'heart',c:'var(--pink)'});
+    var duo=duoStep(wd,key); if(duo){ if(o.away||o.bday||o.train) duo.hint='даже сегодня 5 минут: один урок, чтобы не прервать серию'; mid.push({part:'Итальянский'},duo) }
     if(o.bday) mid.push({part:'Праздник'},{id:'bday',time:'весь день',t:'С днём рождения!',hint:'день без плана: вода, SPF и ваши любимые люди',icon:'heart',c:'var(--coral)',tall:true});
     var out=morning.concat(mid,evening);
     if(wk&&wk.icon==='swim'){ out.forEach(function(x){ if(x.id==='e_clean') x.hint='после бассейна: смыть хлор, крем погуще' }) }
@@ -676,18 +719,20 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(DAYS[key]) return customDay(wd,key,DAYS[key]);
     var at=s.findIndex(function(x){return x.part==='Вечер'});
     var morning=s.slice(0,at), evening=s.slice(at), mid=[];
-    var wk=workoutStep(wd,key), ph=philStep(wd,key), st=studyStep(wd,key), rd=readStep(wd,key);
+    var wk=workoutStep(wd,key), ph=philStep(wd,key), st=studyStep(wd,key), rd=readStep(wd,key), duo=duoStep(wd,key), it=itaStep(wd,key);
     if(isWork(wd)){
       if(rd) mid.push({part:'Дорога на работу'},rd);
       var gymWk=wk&&wk.time==='обед';
       if(gymWk) mid.push({part:'Днём'},wk);
-      if(ph) mid.push({part:'Дорога домой'},ph);
+      if(ph||duo){ mid.push({part:'Дорога домой'}); if(ph) mid.push(ph); if(duo) mid.push(duo) }
       if(wk&&!gymWk) mid.push({part:'Тренировка дома'},wk);
+      if(it) mid.push({part:'Итальянский'},it);
       if(wd===5) mid.push({part:'Пятница'},{id:'free',time:'вечер',t:'Свободный вечер',hint:'по плану: сериал, друзья или ничего, без чувства вины',icon:'heart',c:'var(--pink)'});
     } else {
       if(st) mid.push({part:'Учёба'},st);
       if(ph) mid.push({part:'Учёба'},ph);
       if(wk) mid.push({part:'Тренировка'},wk);
+      if(duo||it){ mid.push({part:'Итальянский'}); if(duo) mid.push(duo); if(it) mid.push(it) }
     }
     var out=morning.concat(mid,evening);
     if(wk&&wk.icon==='swim'){ out.forEach(function(x){ if(x.id==='e_clean') x.hint='после бассейна: смыть хлор, крем погуще' }) }
@@ -738,8 +783,8 @@ th{color:var(--muted);font-weight:600;font-size:12px}
       var b=document.createElement('button'); b.className='wd'; b.type='button'; b.dataset.date=key;
       b.setAttribute('aria-pressed',String(key===iso(sel)));
       if(key===iso(today)) b.setAttribute('aria-current','date');
-      var dots=['mc','led','spf','act','rd','tr','st','ph','wk'].filter(function(k){return st.some(function(x){return x.id===k})}).map(function(k){
-        var c={mc:'var(--navy)',led:'var(--coral)',spf:'var(--yellow)',act:'var(--brown)',st:'var(--violet)',ph:'var(--amber)',rd:'var(--olive)',tr:'var(--olive)',wk:'var(--teal)'}[k];
+      var dots=['mc','led','spf','act','rd','tr','st','ph','it','wk'].filter(function(k){return st.some(function(x){return x.id===k})}).map(function(k){
+        var c={mc:'var(--navy)',led:'var(--coral)',spf:'var(--yellow)',act:'var(--brown)',st:'var(--violet)',ph:'var(--amber)',rd:'var(--olive)',tr:'var(--olive)',it:'var(--green)',wk:'var(--teal)'}[k];
         return '<i class="'+(r[k]?'on':'')+'" style="--c:'+c+'"></i>' }).join('');
       b.innerHTML='<span class="n">'+WDN[d.getDay()]+'</span><span class="d">'+d.getDate()+'</span><span class="dots">'+dots+'</span>';
       w.appendChild(b);
@@ -783,7 +828,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     while(rec(iso(d)).spf){ n++; d=add(d,-1) }
     $('streak').textContent=n;
     $('streakSub').textContent=(n%10===1&&n%100!==11?'день':(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?'дня':'дней'))+' подряд с SPF';
-    renderSkin();
+    renderSkin(); renderIta();
     // путь
     var dn=Math.max(0,Math.round((today-parse(state.start))/864e5)+1);
     $('jSub').textContent='День '+dn+' из 90';
@@ -860,6 +905,23 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     else now.textContent='';
   }
 
+  function renderIta(){
+    var tk=iso(today), done=0, due=0, h='', cur=-1;
+    ITAD.forEach(function(d,i){ var on=!!(state.checks[d]&&state.checks[d].it); if(on) done++; if(d<tk) due++; if(!on&&cur<0&&d>=tk) cur=i });
+    ITAD.forEach(function(d,i){ var on=!!(state.checks[d]&&state.checks[d].it), dl=parse(d);
+      h+='<div class="topic'+(on?' done':'')+(i===cur?' now':'')+'"><span class="no">'+(i+1)+'</span><span class="nm">Урок '+(i+1)+'</span><span class="dl">'+WDN[dl.getDay()].toLowerCase()+', '+dl.getDate()+' '+MSH[dl.getMonth()]+'</span>'+
+        '<button class="ck" type="button" aria-pressed="'+on+'" data-itl="'+d+'" aria-label="Урок пройден: '+(i+1)+'"></button></div>' });
+    $('itTopics').innerHTML=h;
+    $('itDone').textContent=done+'/'+ITA_N;
+    $('itFill').style.width=Math.round(done/ITA_N*100)+'%';
+    $('itPct').textContent=Math.round(done/ITA_N*100)+'% курса';
+    var e=parse(ITAD[ITA_N-1]); $('itEnd').textContent='финиш '+e.getDate()+' '+MSH[e.getMonth()];
+    var late=due-done, st=$('itStatus');
+    st.textContent=done===ITA_N?'курс пройден':late>0?'отстаёте на '+late+' '+plural(late,'урок','урока','уроков'):(tk<ITA_FROM?'старт 11 ноября':'по плану');
+    var n=0, d=new Date(today); if(!rec(iso(d)).duo) d=add(d,-1);
+    while(rec(iso(d)).duo){ n++; d=add(d,-1) }
+    $('duoStreak').textContent=n;
+  }
   function renderPhil(){
     var tk=iso(today), done=0, due=0, html='';
     PHIL.forEach(function(t,i){ if(state.phil['p'+i]) done++; if(t[1]<tk) due++ });
@@ -1030,7 +1092,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     window.scrollTo(0,0);
   }
   function go(v){ try{ location.hash=v }catch(e){} setView(v) }
-  function all(){ renderWeek(); renderTimeline(); renderTrackers(); renderReading(); renderFit(); renderArt(); renderPhil(); renderWater(); renderShop(); renderPlan(); renderFood() }
+  function all(){ renderWeek(); renderTimeline(); renderTrackers(); renderReading(); renderFit(); renderArt(); renderPhil(); renderWater(); renderShop(); renderPlan(); renderFood(); renderIta() }
 
   function msg(t){ $('save1').textContent=t; $('save2').textContent=t }
   function persist(){
@@ -1040,7 +1102,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   document.addEventListener('click',function(e){
     var t=e.target.closest('button'); if(!t) return;
     if(t.dataset.view){ go(t.dataset.view); return }
-    if(t.dataset.go){ var g=t.dataset.go; if(g==='food'){ go('today'); setTimeout(function(){ $('food').scrollIntoView({behavior:'smooth',block:'start'}) },50); return } if(g==='skin'||g==='art'||g==='fit'||g==='phil'){ go('trackers'); setTimeout(function(){ $(g).scrollIntoView({behavior:'smooth',block:'start'}) },50) } else go(g); return }
+    if(t.dataset.go){ var g=t.dataset.go; if(g==='food'){ go('today'); setTimeout(function(){ $('food').scrollIntoView({behavior:'smooth',block:'start'}) },50); return } if(g==='skin'||g==='art'||g==='fit'||g==='phil'||g==='ita'){ go('trackers'); setTimeout(function(){ $(g).scrollIntoView({behavior:'smooth',block:'start'}) },50) } else go(g); return }
     if(t.id==='cycBtn'){ state.cycle={start:iso(today)}; all(); persist(); return }
     if(t.id==='nrDone'){ state.reading.yusupovDone=!state.reading.yusupovDone; if(!state.reading.yusupovDone) delete state.reading.yusupovDone; all(); persist(); return }
     if(t.dataset.ptopic){ var pid='p'+t.dataset.ptopic; state.phil[pid]=!state.phil[pid]; if(!state.phil[pid]) delete state.phil[pid]; renderPhil(); persist(); return }
@@ -1048,6 +1110,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(t.id==='fab'){ go('trackers'); setTimeout(function(){ $('skin').scrollIntoView({behavior:'smooth',block:'start'}) },50); return }
     if(t.id==='prevW'||t.id==='nextW'){ var n=t.id==='prevW'?-7:7; weekStart=add(weekStart,n); sel=add(sel,n); all(); return }
     if(t.dataset.date){ sel=parse(t.dataset.date); renderWeek(); renderTimeline(); renderSkin(); renderWater(); renderFood(); return }
+    if(t.dataset.itl){ var ik=t.dataset.itl, ir=state.checks[ik]||(state.checks[ik]={}); ir.it=!ir.it; if(!ir.it) delete ir.it; if(!Object.keys(ir).length) delete state.checks[ik]; all(); persist(); return }
     if(t.dataset.shift){ var fk=iso(sel); state.shift[fk]=t.dataset.shift; renderFood(); persist(); return }
     if(t.dataset.meal){ var mk=iso(sel), fr=state.food[mk]||(state.food[mk]={}); fr[t.dataset.meal]=!fr[t.dataset.meal]; if(!fr[t.dataset.meal]) delete fr[t.dataset.meal]; if(!Object.keys(fr).length) delete state.food[mk]; renderFood(); persist(); return }
     if(t.dataset.gl||t.id==='wPlus'||t.id==='wMinus'){ var wk2=iso(sel), cur=state.water[wk2]||0, nv;
