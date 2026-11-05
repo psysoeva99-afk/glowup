@@ -225,6 +225,15 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 .up .when{font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
 .up.first{background:var(--teal-soft);border-radius:14px;margin:0 -8px;padding:10px 8px;border-bottom-color:transparent}
 .up.first .when{color:var(--teal);font-weight:700}
+.yr{background:var(--teal-soft);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.yr .yn{display:flex;align-items:baseline;gap:6px;color:var(--teal)}
+.yr .yn b{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.yr .yn span{font-size:22px;font-weight:700;opacity:.7}
+.yr .yt{height:14px;border-radius:99px;background:var(--surface);overflow:hidden;position:relative}
+.yr .yt i{position:absolute;left:0;top:0;bottom:0;background:var(--teal);border-radius:99px;transition:width .4s}
+.yr .yt em{position:absolute;top:0;bottom:0;width:2px;background:var(--fg);opacity:.35}
+.yr .ym{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.yr p{margin:0;font-size:13px;color:var(--fg)}
 .meal{display:grid;grid-template-columns:48px 1fr 30px;gap:10px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
 .meal .mt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
 .meal .mn{font-weight:700;font-size:15px;display:flex;justify-content:space-between;gap:8px}
@@ -293,6 +302,13 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     <div class="card" id="fit">
       <div class="course-head">
         <div><h2>Тренировки</h2><p class="sub">Через день: зал и дом по очереди, нагрузка по циклу</p></div>
+      </div>
+      <div class="yr">
+        <div style="font-size:13px;font-weight:700;color:var(--fg)">Год тренировок · цель 180</div>
+        <div class="yn"><b id="yrN">0</b><span>/180</span></div>
+        <div class="yt"><i id="yrFill" style="width:0"></i><em id="yrPlan" style="left:0"></em></div>
+        <div class="ym"><span>5 ноя 2026</span><span>45</span><span>90</span><span>135</span><span>4 ноя 2027</span></div>
+        <p id="yrSub"></p>
       </div>
       <div class="fs" style="background:var(--pink);flex-direction:row;align-items:center;gap:12px">
         <b id="cycDay" style="color:var(--fg);font-size:28px;min-width:38px;text-align:center">—</b>
@@ -594,6 +610,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     var time;
     if(w.gym){ time=(o&&o.wkTime)?o.wkTime:(weekend?'13:00':'обед'); if(o&&o.wkHint) hint+=' · '+o.wkHint; else if(!weekend) hint+=' · вход в зал до 17:00' }
     else time=(o&&o.wkTime&&!o.travelMorning)?o.wkTime:(weekend?'13:00':'вечер');
+    hint='тренировка '+(yrDoneBefore(key)+1)+'/'+YR_GOAL+' · '+hint;
     return {id:'wk',time:time,dur:(w.gym&&!weekend&&e.type==='D')?45:w.dur,t:w.t,hint:hint,icon:w.icon,c:w.gym?'var(--teal)':'var(--green)',tall:w.dur>=40};
   }
 
@@ -906,7 +923,25 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     $('nrStatus').textContent=done?'дочитано':'в метро';
     $('nrDone').textContent=done?'Вернуть Юсупова в план':'Дочитала';
   }
+  var YR_GOAL=180, YR_FROM='2026-11-05', YR_TO='2027-11-04';
+  function yrDoneBefore(key){ var n=0; Object.keys(state.checks).forEach(function(k){ if(k>=YR_FROM&&k<=YR_TO&&k<key&&state.checks[k].wk) n++ }); return n }
+  function renderYear(){
+    var tk=iso(today), done=0, plan=0;
+    Object.keys(state.checks).forEach(function(k){ if(k>=YR_FROM&&k<=YR_TO&&state.checks[k].wk) done++ });
+    for(var d=parse(YR_FROM); iso(d)<=tk&&iso(d)<=YR_TO; d=add(d,1)){ if(workoutFor(iso(d))!==null) plan++ }
+    plan=Math.min(plan,YR_GOAL);
+    $('yrN').textContent=done;
+    $('yrFill').style.width=Math.min(100,done/YR_GOAL*100)+'%';
+    $('yrPlan').style.left=Math.min(100,plan/YR_GOAL*100)+'%';
+    var diff=done-plan, left=YR_GOAL-done, msg;
+    if(done>=YR_GOAL) msg='Цель года выполнена! '+done+' тренировок.';
+    else if(tk<YR_FROM) msg='Старт 5 ноября.';
+    else if(diff>=0) msg='По плану к сегодняшнему дню '+plan+' — вы '+(diff>0?'впереди на '+diff:'идёте ровно по плану')+'. Осталось '+left+'.';
+    else msg='По плану к сегодняшнему дню '+plan+', сделано '+done+'. Не догоняйте двойной нормой: просто следующая по плану. Осталось '+left+'.';
+    $('yrSub').textContent=msg+' Черта на полосе — где вы должны быть по плану.';
+  }
   function renderFit(){
+    renderYear();
     var wPlan=0,wDone=0,total=0,mPlan=0,mDone=0, tk=iso(today);
     for(var i=0;i<7;i++){ var k=iso(add(monday(today),i)); if(workoutFor(k)!==null){ wPlan++; if(rec(k).wk) wDone++ } }
     Object.keys(state.checks).forEach(function(k){ if(state.checks[k].wk) total++ });
