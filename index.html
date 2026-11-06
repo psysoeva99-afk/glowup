@@ -573,7 +573,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
     book:'<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/>',
     dumbbell:'<path d="M6 7v10M18 7v10M3 9v6M21 9v6M6 12h12"/>',
-    chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',swim:'<path d="M3 17c2 0 2-1.5 4.5-1.5S10 17 12 17s2-1.5 4.5-1.5S19 17 21 17M3 12.5c2 0 2-1.5 4.5-1.5S10 12.5 12 12.5s2-1.5 4.5-1.5 2.5 1.5 4.5 1.5"/><circle cx="16" cy="6" r="2"/>'
+    brief:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',swim:'<path d="M3 17c2 0 2-1.5 4.5-1.5S10 17 12 17s2-1.5 4.5-1.5S19 17 21 17M3 12.5c2 0 2-1.5 4.5-1.5S10 12.5 12 12.5s2-1.5 4.5-1.5 2.5 1.5 4.5 1.5"/><circle cx="16" cy="6" r="2"/>'
   };
 
   // тренировки: через день, по кругу из 8: зал и дом чередуются, раз в круг йога
@@ -774,7 +774,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   // особые дни (график на конкретные даты)
   var DAYS={
     '2026-11-05':{label:'выходной · дома, заболеваю',wkTime:'15:00',art:true,artTime:'12:30',wkType:'P',wkDur:15,wkNote:'вместо силовой: заболеваю, поэтому мягко',wkHint:'засчитывается в годовой счётчик',clean:'17:00'},
-    '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'вечер',wkType:'P',wkDur:30,wkNote:'вместо зала: ещё восстанавливаюсь',wkHint:'сделано',free:'отдых и собрать вещи к поезду'},
+    '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'вечер',wkType:'P',wkDur:30,wkNote:'вместо зала: ещё восстанавливаюсь',wkHint:'сделано',clean:'18:30',cleanDur:45,extra:[{id:'prj',time:'19:30',dur:60,t:'Проект «Управление сменой»',hint:'один конкретный шаг: решить, что именно сделать за этот час, и сделать',icon:'brief',c:'var(--navy)',tall:true}],free:'отдых и собрать вещи к поезду'},
     '2026-11-07':{label:'работа 7–15 · поезд 16:49',commute:true,train:true,travelEve:true},
     '2026-11-08':{label:'родной город',away:true},
     '2026-11-09':{label:'дорога домой · выходной',travelMorning:true,trainPhil:true,wkTime:'до 17:00',wkHint:'если успеете в зал после поезда; не успели — пропуск без вины'},
@@ -790,7 +790,8 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(o.art){ var ti=topicFor(key); if(ti!==null&&ti>=0) mid.push({part:'Учёба'},{id:'st',time:o.artTime||'11:00',dur:90,t:'История искусства',hint:'Тема '+(ti+1)+': '+TOPICS[ti][0]+' · лекции и тест · перенесено с субботы',icon:'museum',c:'var(--violet)',tall:true}) }
     if(o.trainPhil){ var pi=philFor(key); mid.push({part:'В поезде'},{id:'ph',time:'поезд',dur:50,t:'Философия: первая лекция',hint:(pi!==null&&pi>=0)?'Тема '+(pi+1)+': '+PHIL[pi][0]+' · можно слушать в наушниках':'',icon:'book',c:'var(--amber)',tall:true}) }
     var wk=workoutStep(wd,key); if(wk) mid.push({part:'Тренировка'},wk);
-    if(o.clean) mid.push({part:'Дом'},{id:'clean',time:o.clean,dur:60,t:'Уборка дома',hint:'спокойно, без генеральной: пыль, пол, кухня, проветрить. Между делом — тёплое питьё',icon:'home',c:'var(--lilac)',tall:true});
+    if(o.clean) mid.push({part:'Дом'},{id:'clean',time:o.clean,dur:o.cleanDur||60,t:'Уборка дома',hint:'спокойно, без генеральной: пыль, пол, кухня, проветрить. Между делом — тёплое питьё',icon:'home',c:'var(--lilac)',tall:true});
+    if(o.extra) mid.push.apply(mid,[{part:'Дела'}].concat(o.extra));
     if(o.train) mid.push({part:'Поезд 16:49'},bookFirst({id:'tr',time:'16:49',dur:60,t:'Книга в дорогу',hint:'Рассел, «История западной философии»: начать с древних греков',icon:'read',c:'var(--amber)'}));
     if(o.free) mid.push({part:'Пятница'},{id:'free',time:'вечер',t:'Свободный вечер',hint:o.free,icon:'heart',c:'var(--pink)'});
     if(o.away) mid.push({part:'Родной город'},{id:'free',time:'весь день',t:'День с семьёй',hint:'план на паузе: вода и минимум ухода',icon:'heart',c:'var(--pink)'});
