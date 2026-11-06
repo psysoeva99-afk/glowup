@@ -335,6 +335,9 @@ th{color:var(--muted);font-weight:600;font-size:12px}
         <div class="fs"><b id="fitMonth">0%</b><span>за 30 дней</span></div>
       </div>
       <div class="upc" id="fitNext"></div>
+      <div><h3 style="margin:0 0 8px;font-size:15px">Любимые тренировки</h3>
+        <div class="btns"><a class="btn" style="background:var(--green);color:#1F1D22" href="https://youtu.be/Yro5mWLzE4M" target="_blank" rel="noopener">Пилатес дома · 30 мин ↗</a></div>
+        <p class="sub" style="margin:8px 0 0">Подходит вместо силовой, когда мало сил, в дни месячных и при лёгкой простуде.</p></div>
     </div>
     <div class="card" id="waterWeek">
       <div><h2>Вода за неделю</h2><p class="sub" id="wwSub">Цель 2 л, в дни тренировок 2,5 л</p></div>
@@ -476,6 +479,8 @@ th{color:var(--muted);font-weight:600;font-size:12px}
       <li><b>В дни месячных</b>: дыхание, кошка–корова, поза ребёнка, низкий выпад, голубь лёжа, скрутка лёжа, шавасана — мягко и по самочувствию. Поза ребёнка и скрутка часто облегчают спазмы.</li>
       <li>Растяжка не должна болеть: тянет — хорошо, режет или стреляет — ослабить. Не пружинить, дышать ровно.</li>
       <li>Бонус для осанки: после смены достаточно 5 минут — сфинкс, нить в иголку и ноги на стену.</li></ul></div>
+    <div class="gcard" style="--c:#DCEFD0"><h3>Любимые тренировки</h3><ul>
+      <li><a href="https://youtu.be/Yro5mWLzE4M" target="_blank" rel="noopener" style="color:#1F1D22;font-weight:700">Пилатес дома, 30 минут ↗</a> — понравился 6 ноября. Хорошая замена силовой, когда мало сил, в месячные и при лёгкой простуде.</li></ul></div>
     <div class="gcard" style="--c:var(--teal-soft)"><h3>Тренировки · через день</h3><ol>
       <li><b>Зал:</b> ягодицы + задняя поверхность</li>
       <li><b>Дома:</b> ягодицы, спина, плечи, кор</li>
@@ -583,7 +588,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     H3:{t:'Дома: ягодицы, спина, кор',dur:40,icon:'home'},
     Y:{t:'Йога и растяжка',dur:25,icon:'lotus'},
     W:{t:'Прогулка 40 минут',dur:40,icon:'walk'},
-    P:{t:'Домашний пилатес',dur:15,icon:'lotus'}};
+    P:{t:'Домашний пилатес',dur:30,icon:'lotus'}};
   var ROT=['A','H1','B','H2','C','H3','D','Y'];
   // цикл: старт месячных и длина (по Flo: прошлый цикл с 11 октября, следующие ждём 9 ноября)
   function cycleStart(){ return state.cycle&&state.cycle.start||'2026-11-09' }
@@ -622,6 +627,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     var hint=e.note;
     if(e.type==='D') hint+=weekend?' · дорожка 30–40 мин, бассейн 30 мин':' · в будни хватит дорожки 30–40 мин';
     else if(w.gym||e.type.charAt(0)==='H') hint+=' · разминка 10 мин, в конце растяжка';
+    if(e.type==='P') hint+=' · видео в «Гиде» → «Любимые тренировки»';
     if(e.type==='Y') hint+=' · программа в «Гиде»'+(cyclePhase(key)==='men'?', вариант для месячных':'');
     var time;
     if(w.gym){ time=(o&&o.wkTime)?o.wkTime:(weekend?'13:00':'обед'); if(o&&o.wkHint) hint+=' · '+o.wkHint; else if(!weekend) hint+=' · вход в зал до 17:00' }
@@ -767,7 +773,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   var ACTN={ret:['Ретинол','горошина на всё лицо, вокруг глаз не наносить'],hyd:['Увлажняющая сыворотка','день без активов'],acid:['Кислоты','тонер AHA/BHA/PHA, ретинол сегодня не нужен']};
   // особые дни (график на конкретные даты)
   var DAYS={
-    '2026-11-05':{label:'выходной · дома, заболеваю',wkTime:'15:00',art:true,artTime:'12:30',wkType:'P',wkNote:'вместо силовой: заболеваю, поэтому мягко',wkHint:'засчитывается в годовой счётчик',clean:'17:00'},
+    '2026-11-05':{label:'выходной · дома, заболеваю',wkTime:'15:00',art:true,artTime:'12:30',wkType:'P',wkDur:15,wkNote:'вместо силовой: заболеваю, поэтому мягко',wkHint:'засчитывается в годовой счётчик',clean:'17:00'},
     '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'вечер',wkType:'P',wkDur:30,wkNote:'вместо зала: ещё восстанавливаюсь',wkHint:'сделано',free:'отдых и собрать вещи к поезду'},
     '2026-11-07':{label:'работа 7–15 · поезд 16:49',commute:true,train:true,travelEve:true},
     '2026-11-08':{label:'родной город',away:true},
