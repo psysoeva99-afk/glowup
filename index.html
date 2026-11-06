@@ -627,7 +627,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     if(w.gym){ time=(o&&o.wkTime)?o.wkTime:(weekend?'13:00':'обед'); if(o&&o.wkHint) hint+=' · '+o.wkHint; else if(!weekend) hint+=' · вход в зал до 17:00' }
     else { time=(o&&o.wkTime&&!o.travelMorning)?o.wkTime:(weekend?'13:00':'вечер'); if(o&&o.wkType&&o.wkHint) hint+=' · '+o.wkHint }
     hint='тренировка '+(yrDoneBefore(key)+1)+'/'+YR_GOAL+' · '+hint;
-    return {id:'wk',time:time,dur:(w.gym&&!weekend&&e.type==='D')?45:w.dur,t:w.t,hint:hint,icon:w.icon,c:w.gym?'var(--teal)':'var(--green)',tall:w.dur>=40};
+    return {id:'wk',time:time,dur:(o&&o.wkDur)||((w.gym&&!weekend&&e.type==='D')?45:w.dur),t:w.t,hint:hint,icon:w.icon,c:w.gym?'var(--teal)':'var(--green)',tall:w.dur>=40};
   }
 
   // курс «Введение в историю искусства» (ВШЭ): тема → срок (воскресенье)
@@ -768,7 +768,7 @@ th{color:var(--muted);font-weight:600;font-size:12px}
   // особые дни (график на конкретные даты)
   var DAYS={
     '2026-11-05':{label:'выходной · дома, заболеваю',wkTime:'15:00',art:true,artTime:'12:30',wkType:'P',wkNote:'вместо силовой: заболеваю, поэтому мягко',wkHint:'засчитывается в годовой счётчик',clean:'17:00'},
-    '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'15:30',wkHint:'перенесено с субботы · вход в зал до 17:00',free:'отдых и собрать вещи к поезду'},
+    '2026-11-06':{label:'работа 7–15',commute:true,wkTime:'вечер',wkType:'P',wkDur:30,wkNote:'вместо зала: ещё восстанавливаюсь',wkHint:'сделано',free:'отдых и собрать вещи к поезду'},
     '2026-11-07':{label:'работа 7–15 · поезд 16:49',commute:true,train:true,travelEve:true},
     '2026-11-08':{label:'родной город',away:true},
     '2026-11-09':{label:'дорога домой · выходной',travelMorning:true,trainPhil:true,wkTime:'до 17:00',wkHint:'если успеете в зал после поезда; не успели — пропуск без вины'},
@@ -1213,7 +1213,9 @@ th{color:var(--muted);font-weight:600;font-size:12px}
     window.scrollTo(0,0);
   }
   function go(v){ try{ location.hash=v }catch(e){} setView(v) }
-  function all(){ renderWeek(); renderTimeline(); renderTrackers(); renderReading(); renderFit(); renderArt(); renderPhil(); renderWater(); renderShop(); renderPlan(); renderFood(); renderIta() }
+  var PRE_DONE={'2026-11-05':['wk'],'2026-11-06':['wk']};
+  function applyPre(){ state.pre=state.pre||{}; Object.keys(PRE_DONE).forEach(function(k){ PRE_DONE[k].forEach(function(id){ var f=k+':'+id; if(state.pre[f]) return; state.pre[f]=1; (state.checks[k]=state.checks[k]||{})[id]=true }) }) }
+  function all(){ applyPre(); renderWeek(); renderTimeline(); renderTrackers(); renderReading(); renderFit(); renderArt(); renderPhil(); renderWater(); renderShop(); renderPlan(); renderFood(); renderIta() }
 
   function msg(t){ $('save1').textContent=t; $('save2').textContent=t }
   function persist(){
